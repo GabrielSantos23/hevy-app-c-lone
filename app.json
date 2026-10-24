@@ -1,0 +1,133 @@
+{
+  "expo": {
+    "name": "Repforge",
+    "slug": "repforge",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "repforge",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#110f0d",
+    "ios": {
+      "bundleIdentifier": "dev.gabs.repforge",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "dev.gabs.repforge",
+      "adaptiveIcon": {
+        "backgroundColor": "#110f0d",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "server",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "headers": {
+            "Cross-Origin-Embedder-Policy": "credentialless",
+            "Cross-Origin-Opener-Policy": "same-origin"
+          }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#110f0d",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 76
+        }
+      ],
+      "expo-sqlite",
+      "expo-localization",
+      [
+        "expo-notifications",
+        {
+          "color": "#ca4500"
+        }
+      ],
+      "expo-sharing",
+      [
+        "expo-widgets",
+        {
+          "widgets": [
+            {
+              "name": "VolumeWidget",
+              "displayName": "Volume",
+              "description": "Your training volume over the last 7 days.",
+              "ios": {
+                "supportedFamilies": [
+                  "systemSmall",
+                  "systemMedium"
+                ]
+              }
+            },
+            {
+              "name": "CalendarWidget",
+              "displayName": "Calendar",
+              "description": "A monthly view of the days you trained.",
+              "ios": {
+                "supportedFamilies": [
+                  "systemSmall",
+                  "systemLarge"
+                ]
+              }
+            },
+            {
+              "name": "WeekWidget",
+              "displayName": "Last 7 days",
+              "description": "The days you trained in the last week.",
+              "ios": {
+                "supportedFamilies": [
+                  "systemMedium",
+                  "accessoryRectangular"
+                ]
+              }
+            },
+            {
+              "name": "StreakWidget",
+              "displayName": "Streak",
+              "description": "How many weeks in a row you have trained.",
+              "ios": {
+                "supportedFamilies": [
+                  "systemSmall",
+                  "accessoryCircular",
+                  "accessoryInline"
+                ]
+              }
+            },
+            {
+              "name": "StartWidget",
+              "displayName": "Quick start",
+              "description": "Start an empty workout or one of your routines.",
+              "ios": {
+                "supportedFamilies": [
+                  "systemSmall",
+                  "systemMedium"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      [
+        "@kingstinct/react-native-healthkit",
+        {
+          "NSHealthShareUsageDescription": "Repforge reads your Apple Watch workouts, heart rate and active calories to add them to the workouts you log.",
+          "NSHealthUpdateUsageDescription": "Repforge saves your finished workouts to Apple Health when you turn it on.",
+          "background": true
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
