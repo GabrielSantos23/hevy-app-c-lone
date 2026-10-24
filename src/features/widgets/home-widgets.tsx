@@ -318,10 +318,49 @@ const StartWidget = (props: StartProps, env: WidgetEnvironment) => {
   );
 };
 
+const days = ['S', 'S', 'M', 'T', 'W', 'T', 'F'];
+
+const sample = {
+  volume: {
+    title: 'Volume',
+    value: '15.9k kg',
+    caption: 'Last 7 days',
+    bars: [0, 0, 0.8, 0, 1, 0, 0].map((ratio, i) => ({ label: days[i], ratio, today: i === 6 })),
+  },
+  calendar: {
+    title: 'November 2026',
+    weekdays: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+    weeks: [
+      [0, 0, 0, 0, 0, 0, 1],
+      [2, 3, 4, 5, 6, 7, 8],
+      [9, 10, 11, 12, 13, 14, 15],
+      [16, 17, 18, 19, 20, 21, 22],
+      [23, 24, 25, 26, 27, 28, 29],
+      [30, 0, 0, 0, 0, 0, 0],
+    ],
+    done: [2, 5, 11, 13],
+    today: 14,
+  },
+  week: {
+    title: '2 workouts',
+    caption: 'Last 7 days',
+    days: days.map((label, i) => ({ label, day: 8 + i, done: i === 3 || i === 5, today: i === 6 })),
+  },
+  streak: { title: 'Streak', value: 23, unit: 'weeks' },
+  start: {
+    caption: 'Quick access',
+    label: 'Log workout',
+    url: 'repforge://train?start=empty',
+    routinesTitle: 'Routines',
+    empty: 'Create a routine in the app',
+    routines: ['Push', 'Pull', 'Legs', 'Upper'].map((name) => ({ name, url: 'repforge://train' })),
+  },
+};
+
 export const widgets = {
-  volume: createWidget('VolumeWidget', VolumeWidget),
-  calendar: createWidget('CalendarWidget', CalendarWidget),
-  week: createWidget('WeekWidget', WeekWidget),
-  streak: createWidget('StreakWidget', StreakWidget),
-  start: createWidget('StartWidget', StartWidget),
+  volume: createWidget('VolumeWidget', VolumeWidget, sample.volume),
+  calendar: createWidget('CalendarWidget', CalendarWidget, sample.calendar),
+  week: createWidget('WeekWidget', WeekWidget, sample.week),
+  streak: createWidget('StreakWidget', StreakWidget, sample.streak),
+  start: createWidget('StartWidget', StartWidget, sample.start),
 };

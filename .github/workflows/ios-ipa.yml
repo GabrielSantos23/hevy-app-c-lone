@@ -62,7 +62,7 @@ jobs:
           cp -R build/Build/Products/Release-iphoneos/Repforge.app Payload/
           zip -qry Repforge.ipa Payload
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: Repforge-ipa
           path: Repforge.ipa

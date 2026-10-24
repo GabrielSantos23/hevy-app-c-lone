@@ -55,6 +55,7 @@
     "eslint-config-expo": "~58.0.4",
     "jest": "^30.5.2",
     "jest-expo": "^58.0.12",
+    "patch-package": "^8.0.1",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "sharp": "^0.34.5",
@@ -72,7 +73,8 @@
     "format:check": "prettier --check .",
     "test": "jest",
     "db:generate": "drizzle-kit generate",
-    "library:build": "node scripts/build-exercise-library.mts"
+    "library:build": "node scripts/build-exercise-library.mts",
+    "postinstall": "patch-package"
   },
   "private": true,
   "jest": {

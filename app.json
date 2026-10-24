@@ -65,7 +65,8 @@
                 "supportedFamilies": [
                   "systemSmall",
                   "systemMedium"
-                ]
+                ],
+                "initialLayout": "src/features/widgets/home-widgets.tsx"
               }
             },
             {
@@ -76,7 +77,8 @@
                 "supportedFamilies": [
                   "systemSmall",
                   "systemLarge"
-                ]
+                ],
+                "initialLayout": "src/features/widgets/home-widgets.tsx"
               }
             },
             {
@@ -87,7 +89,8 @@
                 "supportedFamilies": [
                   "systemMedium",
                   "accessoryRectangular"
-                ]
+                ],
+                "initialLayout": "src/features/widgets/home-widgets.tsx"
               }
             },
             {
@@ -99,7 +102,8 @@
                   "systemSmall",
                   "accessoryCircular",
                   "accessoryInline"
-                ]
+                ],
+                "initialLayout": "src/features/widgets/home-widgets.tsx"
               }
             },
             {
@@ -110,7 +114,8 @@
                 "supportedFamilies": [
                   "systemSmall",
                   "systemMedium"
-                ]
+                ],
+                "initialLayout": "src/features/widgets/home-widgets.tsx"
               }
             }
           ]
