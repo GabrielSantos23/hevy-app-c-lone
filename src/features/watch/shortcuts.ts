@@ -26,13 +26,11 @@ export function startWatchWorkout() {
 
 const pad = (n: number) => String(Math.trunc(Math.abs(n))).padStart(2, '0');
 
-export function localIso(ms: number) {
+export function localStamp(ms: number) {
   const d = new Date(ms);
-  const offset = -d.getTimezoneOffset();
   return (
-    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` +
-    `T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}` +
-    `${offset >= 0 ? '+' : '-'}${pad(offset / 60)}:${pad(offset % 60)}`
+    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ` +
+    `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
   );
 }
 
@@ -40,7 +38,7 @@ export function finishWatchWorkout(workoutId: string, startedAt: number) {
   if (!enabled()) return;
   run(FINISH_SHORTCUT, {
     input: 'text',
-    text: localIso(startedAt),
+    text: localStamp(startedAt - 60_000),
     'x-success': `repforge://watch-data?workout=${workoutId}`,
     'x-error': `repforge://watch-data?workout=${workoutId}`,
   });

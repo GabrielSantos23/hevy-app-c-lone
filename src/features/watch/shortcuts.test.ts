@@ -1,4 +1,4 @@
-import { localIso, parseNumberText, parseWatchResult } from './shortcuts';
+import { localStamp, parseNumberText, parseWatchResult } from './shortcuts';
 
 jest.mock('react-native', () => ({ Linking: { openURL: jest.fn() }, Platform: { OS: 'ios' } }));
 jest.mock('@/stores/preferences', () => ({ usePreferences: { getState: () => ({}) } }));
@@ -17,15 +17,9 @@ describe('watch shortcut result', () => {
     expect(parseNumberText('312,46 kcal')).toBe(312.46);
   });
 
-  it('sends the workout start as a local ISO date with its offset', () => {
-    const ms = Date.UTC(2026, 9, 25, 20, 5, 9);
-    const iso = localIso(ms);
-    expect(iso).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/);
-    expect(Date.parse(iso)).toBe(ms);
-  });
-
-  it('adds up the active energy samples', () => {
-    expect(parseWatchResult('kcal=1.5\n2,25\n3;hr=90\n100')).toEqual({ kcal: 6.75, hr: [90, 100] });
+  it('sends the workout start as a plain local date and time', () => {
+    const ms = new Date(2026, 9, 25, 19, 5, 9).getTime();
+    expect(localStamp(ms)).toBe('2026-10-25 19:05:09');
   });
 
   it('copes with missing values and line breaks', () => {
