@@ -422,7 +422,7 @@ const ptBR: Translation = {
     finishStep2:
       '"Encerrar Treino" → "Aguardar" 10 segundos → "Obter Datas da Entrada": Entrada do Atalho.',
     finishStep3:
-      '"Buscar Amostras de Saúde": Frequência Cardíaca, Data de Início é depois de Datas → "Obter Detalhes": Valor → "Combinar Texto": Espaços.',
+      '"Buscar Amostras de Saúde": Frequência Cardíaca, Data de Início está entre Datas e Data Atual → "Obter Detalhes": Valor → "Combinar Texto": Espaços.',
     finishStep4: 'O mesmo para Energia Ativa, mais "Calcular Estatísticas": Soma.',
     finishStep5: '"Texto": kcal=Estatísticas;hr=Texto Combinado → "Parar e Gerar Saída".',
     openShortcuts: 'Abrir Atalhos',

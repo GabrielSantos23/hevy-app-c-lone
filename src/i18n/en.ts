@@ -419,7 +419,7 @@ const en = {
     finishTitle: '"{{name}}"',
     finishStep2: '"End Workout" → "Wait" 10 seconds → "Get Dates from Input": Shortcut Input.',
     finishStep3:
-      '"Find Health Samples": Heart Rate, Start Date is after Dates → "Get Details": Value → "Combine Text": Spaces.',
+      '"Find Health Samples": Heart Rate, Start Date is between Dates and Current Date → "Get Details": Value → "Combine Text": Spaces.',
     finishStep4: 'Same for Active Energy, plus "Calculate Statistics": Sum.',
     finishStep5: '"Text": kcal=Statistics;hr=Combined Text → "Stop and Output".',
     openShortcuts: 'Open Shortcuts',
