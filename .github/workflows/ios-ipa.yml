@@ -64,14 +64,28 @@ jobs:
             codesign -d --entitlements - "$EXT" || true
           done
 
-      - name: Package the IPA
+      - name: Package the IPAs
         run: |
-          mkdir Payload
-          cp -R build/Build/Products/Release-iphoneos/Repforge.app Payload/
-          zip -qry Repforge.ipa Payload
+          APP=build/Build/Products/Release-iphoneos/Repforge.app
+          package() {
+            rm -rf Payload && mkdir Payload
+            cp -R "$1" Payload/Repforge.app
+            zip -qry "$2" Payload
+          }
+          package "$APP" Repforge.ipa
+
+          cp -R "$APP" no-widgets.app
+          rm -rf no-widgets.app/PlugIns
+          codesign --force --sign - --entitlements free.entitlements no-widgets.app
+          package no-widgets.app Repforge-no-widgets.ipa
+
+          cp -R "$APP" no-entitlements.app
+          codesign --force --sign - no-entitlements.app/PlugIns/*.appex
+          codesign --force --sign - no-entitlements.app
+          package no-entitlements.app Repforge-no-entitlements.ipa
 
       - uses: actions/upload-artifact@v5
         with:
           name: Repforge-ipa
-          path: Repforge.ipa
+          path: Repforge*.ipa
           retention-days: 7
