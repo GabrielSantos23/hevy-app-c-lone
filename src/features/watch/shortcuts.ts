@@ -24,11 +24,23 @@ export function startWatchWorkout() {
   run(START_SHORTCUT, { 'x-success': 'repforge://workout', 'x-error': 'repforge://workout' });
 }
 
-export function finishWatchWorkout(workoutId: string, startedAt: number, endedAt: number) {
+const pad = (n: number) => String(Math.trunc(Math.abs(n))).padStart(2, '0');
+
+export function localIso(ms: number) {
+  const d = new Date(ms);
+  const offset = -d.getTimezoneOffset();
+  return (
+    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` +
+    `T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}` +
+    `${offset >= 0 ? '+' : '-'}${pad(offset / 60)}:${pad(offset % 60)}`
+  );
+}
+
+export function finishWatchWorkout(workoutId: string, startedAt: number) {
   if (!enabled()) return;
   run(FINISH_SHORTCUT, {
     input: 'text',
-    text: String(Math.ceil((endedAt - startedAt) / 60_000) + 1),
+    text: localIso(startedAt),
     'x-success': `repforge://watch-data?workout=${workoutId}`,
     'x-error': `repforge://history/${workoutId}`,
   });

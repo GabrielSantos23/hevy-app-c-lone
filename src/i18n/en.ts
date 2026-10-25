@@ -417,9 +417,9 @@ const en = {
     startTitle: '"{{name}}"',
     startStep2: 'Add "Start Workout": Traditional Strength Training.',
     finishTitle: '"{{name}}"',
-    finishStep2: '"End Workout" → "Wait" 10 seconds.',
+    finishStep2: '"End Workout" → "Wait" 10 seconds → "Get Dates from Input": Shortcut Input.',
     finishStep3:
-      '"Find Health Samples": Heart Rate in the last "Shortcut Input" minutes → "Get Details": Value → "Combine Text": Spaces.',
+      '"Find Health Samples": Heart Rate, Start Date is after Dates → "Get Details": Value → "Combine Text": Spaces.',
     finishStep4: 'Same for Active Energy, plus "Calculate Statistics": Sum.',
     finishStep5: '"Text": kcal=Statistics;hr=Combined Text → "Stop and Output".',
     openShortcuts: 'Open Shortcuts',

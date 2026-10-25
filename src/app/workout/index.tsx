@@ -100,10 +100,9 @@ export default function WorkoutScreen() {
       {
         text: t('workout.finish'),
         onPress: () => {
-          const endedAt = Date.now();
-          const id = finishWorkout(workout, units, endedAt);
+          const id = finishWorkout(workout, units, Date.now());
           close();
-          finishWatchWorkout(id, workout.startedAt, endedAt);
+          finishWatchWorkout(id, workout.startedAt);
         },
       },
     ]);

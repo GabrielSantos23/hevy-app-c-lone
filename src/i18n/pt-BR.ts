@@ -419,9 +419,10 @@ const ptBR: Translation = {
     startTitle: '"{{name}}"',
     startStep2: 'Adicione "Iniciar Treino": Treino de Força Tradicional.',
     finishTitle: '"{{name}}"',
-    finishStep2: '"Encerrar Treino" → "Aguardar" 10 segundos.',
+    finishStep2:
+      '"Encerrar Treino" → "Aguardar" 10 segundos → "Obter Datas da Entrada": Entrada do Atalho.',
     finishStep3:
-      '"Buscar Amostras de Saúde": Frequência Cardíaca nos últimos "Entrada do Atalho" minutos → "Obter Detalhes": Valor → "Combinar Texto": Espaços.',
+      '"Buscar Amostras de Saúde": Frequência Cardíaca, Data de Início é depois de Datas → "Obter Detalhes": Valor → "Combinar Texto": Espaços.',
     finishStep4: 'O mesmo para Energia Ativa, mais "Calcular Estatísticas": Soma.',
     finishStep5: '"Texto": kcal=Estatísticas;hr=Texto Combinado → "Parar e Gerar Saída".',
     openShortcuts: 'Abrir Atalhos',
