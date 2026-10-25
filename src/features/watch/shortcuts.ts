@@ -42,7 +42,7 @@ export function finishWatchWorkout(workoutId: string, startedAt: number) {
     input: 'text',
     text: localIso(startedAt),
     'x-success': `repforge://watch-data?workout=${workoutId}`,
-    'x-error': `repforge://history/${workoutId}`,
+    'x-error': `repforge://watch-data?workout=${workoutId}`,
   });
 }
 
