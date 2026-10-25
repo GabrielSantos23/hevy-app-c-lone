@@ -25,6 +25,7 @@ import {
 import { createWidget, type WidgetEnvironment } from 'expo-widgets';
 
 import type { CalendarProps, StartProps, StreakProps, VolumeProps, WeekProps } from './data';
+import './workout-activity';
 
 const VolumeWidget = (props: VolumeProps, env: WidgetEnvironment) => {
   'widget';

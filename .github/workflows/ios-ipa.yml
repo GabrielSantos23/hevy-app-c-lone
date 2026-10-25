@@ -74,15 +74,10 @@ jobs:
           }
           package "$APP" Repforge.ipa
 
-          cp -R "$APP" no-widgets.app
-          rm -rf no-widgets.app/PlugIns
-          codesign --force --sign - --entitlements free.entitlements no-widgets.app
-          package no-widgets.app Repforge-no-widgets.ipa
-
-          cp -R "$APP" no-entitlements.app
-          codesign --force --sign - no-entitlements.app/PlugIns/*.appex
-          codesign --force --sign - no-entitlements.app
-          package no-entitlements.app Repforge-no-entitlements.ipa
+          cp -R "$APP" sidestore.app
+          codesign --force --sign - sidestore.app/PlugIns/*.appex
+          codesign --force --sign - sidestore.app
+          package sidestore.app Repforge-sidestore.ipa
 
       - uses: actions/upload-artifact@v5
         with:
