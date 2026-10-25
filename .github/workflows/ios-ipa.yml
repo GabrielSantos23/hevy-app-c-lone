@@ -33,6 +33,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
+            ENABLE_DEBUG_DYLIB=NO \
             | tail -n 200
 
       - name: Ad-hoc sign with the app's entitlements
@@ -47,6 +48,13 @@ jobs:
             codesign --force --sign - ${ENT:+--entitlements "$ENT"} "$EXT"
           done
           ENT=$(find ios/Repforge -name '*.entitlements' | head -n1)
+          if [ -n "$ENT" ]; then
+            cp "$ENT" free.entitlements
+            for KEY in aps-environment com.apple.developer.healthkit com.apple.developer.healthkit.access com.apple.developer.healthkit.background-delivery; do
+              /usr/libexec/PlistBuddy -c "Delete :$KEY" free.entitlements 2>/dev/null || true
+            done
+            ENT=free.entitlements
+          fi
           codesign --force --sign - ${ENT:+--entitlements "$ENT"} "$APP"
           echo "--- app entitlements"
           codesign -d --entitlements - "$APP" || true
