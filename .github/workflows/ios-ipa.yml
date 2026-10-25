@@ -75,8 +75,12 @@ jobs:
           package "$APP" Repforge.ipa
 
           cp -R "$APP" sidestore.app
-          codesign --force --sign - sidestore.app/PlugIns/*.appex
-          codesign --force --sign - sidestore.app
+          /usr/libexec/PlistBuddy \
+            -c "Add :keychain-access-groups array" \
+            -c "Add :keychain-access-groups:0 string AAAAAAAAAA.dev.gabs.repforge" \
+            keychain.entitlements
+          codesign --force --sign - --entitlements keychain.entitlements sidestore.app/PlugIns/*.appex
+          codesign --force --sign - --entitlements keychain.entitlements sidestore.app
           package sidestore.app Repforge-sidestore.ipa
 
       - uses: actions/upload-artifact@v5
