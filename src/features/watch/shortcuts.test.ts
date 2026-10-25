@@ -24,6 +24,10 @@ describe('watch shortcut result', () => {
     expect(Date.parse(iso)).toBe(ms);
   });
 
+  it('adds up the active energy samples', () => {
+    expect(parseWatchResult('kcal=1.5\n2,25\n3;hr=90\n100')).toEqual({ kcal: 6.75, hr: [90, 100] });
+  });
+
   it('copes with missing values and line breaks', () => {
     expect(parseWatchResult('kcal=;hr=')).toEqual({ kcal: null, hr: [] });
     expect(parseWatchResult('hr=70\n75\n80')).toEqual({ kcal: null, hr: [70, 75, 80] });

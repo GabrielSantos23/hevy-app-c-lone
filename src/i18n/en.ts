@@ -419,9 +419,9 @@ const en = {
     finishTitle: '"{{name}}"',
     finishStep2: '"End Workout" → "Wait" 10 seconds → "Get Dates from Input": Shortcut Input.',
     finishStep3:
-      '"Find Health Samples": Heart Rate, Start Date is between Dates and Current Date → "Get Details": Value → "Combine Text": Spaces.',
-    finishStep4: 'Same for Active Energy, plus "Calculate Statistics": Sum.',
-    finishStep5: '"Text": kcal=Statistics;hr=Combined Text → "Stop and Output".',
+      '"Find Health Samples": Heart Rate, Start Date is between Shortcut Input and Current Date → "Get Details of Health Samples": Value.',
+    finishStep4: 'The same two actions for Active Energy.',
+    finishStep5: '"Text": kcal=second Details;hr=first Details → "Stop and Output": Text.',
     noDataTitle: 'No Apple Watch data',
     noDataBody: 'The Repforge Finish shortcut returned: {{result}}',
     shortcutError: 'The Repforge Finish shortcut stopped with an error: {{message}}',

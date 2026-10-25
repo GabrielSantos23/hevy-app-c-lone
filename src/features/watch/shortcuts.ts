@@ -60,12 +60,14 @@ export function parseNumberText(text: string): number | null {
 }
 
 export function parseWatchResult(text: string): WatchData {
-  const field = (key: string) => new RegExp(`${key}\\s*=\\s*([^;]*)`, 'i').exec(text)?.[1] ?? '';
-  return {
-    kcal: parseNumberText(field('kcal')),
-    hr: field('hr')
+  const field = (key: string) =>
+    (new RegExp(`${key}\\s*=\\s*([^;]*)`, 'i').exec(text)?.[1] ?? '')
       .split(/\s+/)
       .map(parseNumberText)
-      .filter((n): n is number => n !== null && n > 0),
+      .filter((n): n is number => n !== null && n > 0);
+  const kcal = field('kcal');
+  return {
+    kcal: kcal.length ? kcal.reduce((a, b) => a + b, 0) : null,
+    hr: field('hr'),
   };
 }

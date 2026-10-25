@@ -422,9 +422,10 @@ const ptBR: Translation = {
     finishStep2:
       '"Encerrar Treino" → "Aguardar" 10 segundos → "Obter Datas da Entrada": Entrada do Atalho.',
     finishStep3:
-      '"Buscar Amostras de Saúde": Frequência Cardíaca, Data de Início está entre Datas e Data Atual → "Obter Detalhes": Valor → "Combinar Texto": Espaços.',
-    finishStep4: 'O mesmo para Energia Ativa, mais "Calcular Estatísticas": Soma.',
-    finishStep5: '"Texto": kcal=Estatísticas;hr=Texto Combinado → "Parar e Gerar Saída".',
+      '"Buscar Amostras de Saúde": Frequência Cardíaca, Data de Início entre Entrada do Atalho e Data Atual → "Obter Detalhes das Amostras de Saúde": Valor.',
+    finishStep4: 'As mesmas duas ações para Energia Ativa.',
+    finishStep5:
+      '"Texto": kcal=segundos Detalhes;hr=primeiros Detalhes → "Parar e Gerar Saída": Texto.',
     noDataTitle: 'Sem dados do Apple Watch',
     noDataBody: 'O atalho Repforge Finish retornou: {{result}}',
     shortcutError: 'O atalho Repforge Finish parou com um erro: {{message}}',
