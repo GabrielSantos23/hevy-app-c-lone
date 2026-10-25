@@ -57,7 +57,7 @@ const VolumeWidget = (props: VolumeProps, env: WidgetEnvironment) => {
           <RoundedRectangle
             cornerRadius={3}
             modifiers={[
-              foregroundStyle(b.ratio > 0 ? '#CA4500' : empty),
+              foregroundStyle(b.ratio > 0 ? '#0071E3' : empty),
               frame({ width: medium ? 10 : 8, height: Math.max(3, b.ratio * height) }),
             ]}
           />
@@ -75,7 +75,7 @@ const VolumeWidget = (props: VolumeProps, env: WidgetEnvironment) => {
   );
   const root = [
     frame({ maxWidth: Infinity, maxHeight: Infinity, alignment: 'topLeading' as const }),
-    containerBackground(dark ? '#1C1A18' : '#FFFFFF', 'widget'),
+    containerBackground(dark ? '#161618' : '#FFFFFF', 'widget'),
     widgetURL('repforge://profile'),
   ];
   return medium ? (
@@ -97,7 +97,7 @@ const CalendarWidget = (props: CalendarProps, env: WidgetEnvironment) => {
   'widget';
   const dark = env.colorScheme === 'dark';
   const small = env.widgetFamily === 'systemSmall';
-  const accent = dark ? '#FA8746' : '#B53900';
+  const accent = dark ? '#409CFF' : '#005EBD';
   const muted = { type: 'hierarchical', style: 'secondary' } as const;
   const cell = small ? 17 : 34;
   const size = small ? 9 : 14;
@@ -107,7 +107,7 @@ const CalendarWidget = (props: CalendarProps, env: WidgetEnvironment) => {
       spacing={small ? 2 : 6}
       modifiers={[
         frame({ maxWidth: Infinity, maxHeight: Infinity, alignment: 'topLeading' }),
-        containerBackground(dark ? '#1C1A18' : '#FFFFFF', 'widget'),
+        containerBackground(dark ? '#161618' : '#FFFFFF', 'widget'),
         widgetURL('repforge://history'),
       ]}
     >
@@ -144,7 +144,7 @@ const CalendarWidget = (props: CalendarProps, env: WidgetEnvironment) => {
                 {done ? (
                   <Circle
                     modifiers={[
-                      foregroundStyle('#CA4500'),
+                      foregroundStyle('#0071E3'),
                       frame({ width: cell - 2, height: cell - 2 }),
                     ]}
                   />
@@ -162,7 +162,7 @@ const CalendarWidget = (props: CalendarProps, env: WidgetEnvironment) => {
 const WeekWidget = (props: WeekProps, env: WidgetEnvironment) => {
   'widget';
   const dark = env.colorScheme === 'dark';
-  const accent = dark ? '#FA8746' : '#B53900';
+  const accent = dark ? '#409CFF' : '#005EBD';
   const muted = { type: 'hierarchical', style: 'secondary' } as const;
   const empty = { type: 'hierarchical', style: 'quaternary' } as const;
   if (env.widgetFamily === 'accessoryRectangular')
@@ -188,7 +188,7 @@ const WeekWidget = (props: WeekProps, env: WidgetEnvironment) => {
       spacing={10}
       modifiers={[
         frame({ maxWidth: Infinity, maxHeight: Infinity, alignment: 'topLeading' }),
-        containerBackground(dark ? '#1C1A18' : '#FFFFFF', 'widget'),
+        containerBackground(dark ? '#161618' : '#FFFFFF', 'widget'),
         widgetURL('repforge://history'),
       ]}
     >
@@ -201,7 +201,7 @@ const WeekWidget = (props: WeekProps, env: WidgetEnvironment) => {
         {props.days.map((d, i) => (
           <VStack key={i} spacing={4}>
             <ZStack modifiers={[frame({ width: 34, height: 34 })]}>
-              <Circle modifiers={[foregroundStyle(d.done ? '#CA4500' : empty)]} />
+              <Circle modifiers={[foregroundStyle(d.done ? '#0071E3' : empty)]} />
               <Text
                 modifiers={[
                   font({ size: 14, weight: d.done || d.today ? 'bold' : 'regular' }),
@@ -245,11 +245,11 @@ const StreakWidget = (props: StreakProps, env: WidgetEnvironment) => {
       spacing={2}
       modifiers={[
         frame({ maxWidth: Infinity, maxHeight: Infinity, alignment: 'topLeading' }),
-        containerBackground(dark ? '#1C1A18' : '#FFFFFF', 'widget'),
+        containerBackground(dark ? '#161618' : '#FFFFFF', 'widget'),
         widgetURL('repforge://profile'),
       ]}
     >
-      <Image systemName="flame.fill" size={26} color={dark ? '#FA8746' : '#CA4500'} />
+      <Image systemName="flame.fill" size={26} color="#FF9500" />
       <Spacer />
       <Text modifiers={[font({ size: 12 }), foregroundStyle(muted)]}>{props.title}</Text>
       <Text modifiers={[font({ size: 34, weight: 'bold' }), monospacedDigit()]}>
@@ -264,8 +264,8 @@ const StartWidget = (props: StartProps, env: WidgetEnvironment) => {
   'widget';
   const dark = env.colorScheme === 'dark';
   const muted = { type: 'hierarchical', style: 'secondary' } as const;
-  const tile = dark ? '#272421' : '#F2F0ED';
-  const card = containerBackground(dark ? '#1C1A18' : '#FFFFFF', 'widget');
+  const tile = dark ? '#262629' : '#E5E5EA';
+  const card = containerBackground(dark ? '#161618' : '#FFFFFF', 'widget');
   const fill = frame({ maxWidth: Infinity, maxHeight: Infinity, alignment: 'topLeading' });
   const start = (
     <VStack alignment="leading" spacing={2}>
@@ -273,7 +273,7 @@ const StartWidget = (props: StartProps, env: WidgetEnvironment) => {
       <Text modifiers={[font({ size: 17, weight: 'bold' }), lineLimit(2)]}>{props.label}</Text>
       <Spacer />
       <ZStack modifiers={[frame({ width: 40, height: 40 })]}>
-        <Circle modifiers={[foregroundStyle('#CA4500')]} />
+        <Circle modifiers={[foregroundStyle('#0071E3')]} />
         <Image systemName="plus" size={18} color="#FFFFFF" />
       </ZStack>
     </VStack>

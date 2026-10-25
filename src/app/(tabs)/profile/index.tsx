@@ -1,5 +1,5 @@
 import { router, Stack } from 'expo-router';
-import { CaretRight, FileCsv, Heartbeat, Ruler } from 'phosphor-react-native';
+import { CaretRight, FileCsv, Ruler, Watch } from 'phosphor-react-native';
 import { type ReactNode, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, Text, View } from 'react-native';
@@ -141,9 +141,9 @@ export default function ProfileScreen() {
           />
           {Platform.OS === 'ios' ? (
             <LinkRow
-              icon={<Heartbeat size={22} color={hex(scheme, 'primary-text')} />}
-              label={t('health.title')}
-              onPress={() => router.push('/profile/health')}
+              icon={<Watch size={22} color={hex(scheme, 'primary-text')} />}
+              label={t('watch.title')}
+              onPress={() => router.push('/profile/watch')}
               last
             />
           ) : null}

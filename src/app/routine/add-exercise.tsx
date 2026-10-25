@@ -11,17 +11,11 @@ import { usePreferences } from '@/stores/preferences';
 import { useRoutineDraft } from '@/stores/routine-draft';
 import { useWorkout } from '@/stores/workout';
 import { hex } from '@/theme/tokens';
-import { SchemeScope, useScheme } from '@/theme/theme-root';
+import { useScheme } from '@/theme/theme-root';
 
 export default function AddExerciseRoute() {
   const { target } = useLocalSearchParams<{ target?: 'routine' | 'workout' }>();
-  return target === 'workout' ? (
-    <SchemeScope scheme="workout">
-      <AddExerciseScreen target={target} />
-    </SchemeScope>
-  ) : (
-    <AddExerciseScreen target={target} />
-  );
+  return <AddExerciseScreen target={target} />;
 }
 
 function AddExerciseScreen({ target }: { target?: 'routine' | 'workout' }) {

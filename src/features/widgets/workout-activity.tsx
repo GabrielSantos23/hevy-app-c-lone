@@ -16,7 +16,7 @@ import type { ActivityProps } from './activity';
 
 const WorkoutActivity = (props: ActivityProps, env: LiveActivityEnvironment) => {
   'widget';
-  const accent = env.isLuminanceReduced ? '#FFFFFF' : '#FA8746';
+  const accent = env.isLuminanceReduced ? '#FFFFFF' : '#409CFF';
   const muted = { type: 'hierarchical', style: 'secondary' } as const;
   const started = new Date(props.startedAt);
   const elapsed = { lower: started, upper: new Date(props.startedAt + 86_400_000) };
@@ -60,7 +60,7 @@ const WorkoutActivity = (props: ActivityProps, env: LiveActivityEnvironment) => 
         <Button
           label={props.labels.skip}
           target="rest-skip"
-          modifiers={[buttonStyle('borderedProminent'), tint('#CA4500')]}
+          modifiers={[buttonStyle('borderedProminent'), tint('#0071E3')]}
         />
       </HStack>
     </VStack>
@@ -76,7 +76,7 @@ const WorkoutActivity = (props: ActivityProps, env: LiveActivityEnvironment) => 
           label={props.labels.complete}
           systemImage="checkmark"
           target="complete-set"
-          modifiers={[labelStyle('iconOnly'), buttonStyle('borderedProminent'), tint('#CA4500')]}
+          modifiers={[labelStyle('iconOnly'), buttonStyle('borderedProminent'), tint('#0071E3')]}
         />
       ) : null}
     </HStack>

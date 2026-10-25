@@ -10,7 +10,6 @@ import { useDbQuery } from '@/db/use-db-query';
 import { useExerciseName } from '@/features/exercises/display';
 import { draftField, setFields } from '@/features/exercises/fields';
 import { ExerciseThumb } from '@/features/exercises/media';
-import { HealthSection } from '@/features/health/health-section';
 import { toDraftSet } from '@/features/routines/convert';
 import { scanRecords } from '@/features/stats/calc';
 import {
@@ -22,6 +21,7 @@ import {
   workoutSummaries,
 } from '@/features/stats/data';
 import { useWorkoutFormat } from '@/features/stats/workout-card';
+import { WatchSection } from '@/features/watch/watch-section';
 import { BodyMap } from '@/features/workouts/body-map';
 import { formatDurationWords } from '@/features/workouts/stats';
 import { usePreferences } from '@/stores/preferences';
@@ -92,7 +92,7 @@ export default function WorkoutDetailScreen() {
         {summary.notes ? (
           <Text className="font-regular text-body text-foreground">{summary.notes}</Text>
         ) : null}
-        <HealthSection workoutId={summary.id} />
+        <WatchSection workoutId={summary.id} />
         {summary.exercises.map((e) => (
           <ExerciseBlock key={e.entryId} entry={e} prSetIds={prSetIds} />
         ))}

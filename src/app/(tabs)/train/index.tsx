@@ -24,6 +24,7 @@ import {
   routineTables,
 } from '@/features/routines/data';
 import { estimateSeconds } from '@/features/routines/estimate';
+import { startWatchWorkout } from '@/features/watch/shortcuts';
 import { workoutFromRoutine } from '@/features/workouts/data';
 import { prepareRestNotifications, stopRest } from '@/features/workouts/rest-timer';
 import { formatElapsed } from '@/features/workouts/stats';
@@ -73,6 +74,7 @@ export default function TrainScreen() {
       useWorkout.getState().begin(w);
       prepareRestNotifications();
       router.push('/workout');
+      startWatchWorkout();
     };
     if (!useWorkout.getState().workout) return go();
     Alert.alert(t('workout.activeTitle'), t('workout.activeBody'), [

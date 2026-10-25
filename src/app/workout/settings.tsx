@@ -5,17 +5,9 @@ import { Pressable, ScrollView, Switch, Text, TextInput, View } from 'react-nati
 import { formatWeight, parseWeight } from '@/lib/units';
 import { type Preferences, usePreferences } from '@/stores/preferences';
 import { hex } from '@/theme/tokens';
-import { SchemeScope, useScheme } from '@/theme/theme-root';
+import { useScheme } from '@/theme/theme-root';
 
-export default function WorkoutSettingsRoute() {
-  return (
-    <SchemeScope scheme="workout">
-      <WorkoutSettingsScreen />
-    </SchemeScope>
-  );
-}
-
-function WorkoutSettingsScreen() {
+export default function WorkoutSettingsScreen() {
   const { t } = useTranslation();
   const scheme = useScheme();
   const prefs = usePreferences();

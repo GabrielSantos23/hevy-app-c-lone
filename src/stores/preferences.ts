@@ -19,8 +19,7 @@ export type Preferences = {
   countWarmupsInVolume: boolean;
   weekStart: 'monday' | 'sunday';
   bodyWeightKg: number | null;
-  healthSync: boolean;
-  healthWrite: boolean;
+  watchShortcuts: boolean;
 };
 
 type PreferencesStore = Preferences & {
@@ -41,8 +40,7 @@ export const defaultPreferences: Preferences = {
   countWarmupsInVolume: false,
   weekStart: 'monday',
   bodyWeightKg: null,
-  healthSync: false,
-  healthWrite: false,
+  watchShortcuts: false,
 };
 
 export const usePreferences = create<PreferencesStore>()(

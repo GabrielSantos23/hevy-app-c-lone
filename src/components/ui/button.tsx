@@ -1,5 +1,10 @@
+import { GlassView } from 'expo-glass-effect';
 import type { ReactNode } from 'react';
 import { Pressable, type PressableProps, Text } from 'react-native';
+
+import { useGlass } from '@/lib/use-glass';
+import { hex } from '@/theme/tokens';
+import { useScheme } from '@/theme/theme-root';
 
 type Variant = 'primary' | 'secondary' | 'destructive' | 'tonal' | 'tonal-destructive';
 type Size = 'md' | 'lg';
@@ -41,6 +46,32 @@ export function Button({
   pill = false,
   ...rest
 }: ButtonProps) {
+  const glass = useGlass();
+  const scheme = useScheme();
+  const content = (
+    <>
+      {icon}
+      <Text className={`font-semibold text-headline ${labels[variant]}`}>{label}</Text>
+    </>
+  );
+  if (glass)
+    return (
+      <GlassView
+        isInteractive
+        colorScheme={scheme}
+        tintColor={variant === 'primary' ? hex(scheme, 'primary') : undefined}
+        style={{ borderRadius: pill ? 999 : 12, opacity: rest.disabled ? 0.5 : 1 }}
+      >
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ disabled: !!rest.disabled }}
+          className={`flex-row items-center justify-center gap-2 active:opacity-80 ${sizes[size]}`}
+          {...rest}
+        >
+          {content}
+        </Pressable>
+      </GlassView>
+    );
   return (
     <Pressable
       accessibilityRole="button"
@@ -50,8 +81,7 @@ export function Button({
       }`}
       {...rest}
     >
-      {icon}
-      <Text className={`font-semibold text-headline ${labels[variant]}`}>{label}</Text>
+      {content}
     </Pressable>
   );
 }

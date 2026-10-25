@@ -10,7 +10,6 @@ module.exports = defineConfig([
     files: [
       'src/features/exercises/media.tsx',
       'src/features/widgets/sync.ios.ts',
-      'src/features/health/healthkit.ios.ts',
     ],
     rules: { '@typescript-eslint/no-require-imports': 'off' },
   },

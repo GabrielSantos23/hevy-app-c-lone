@@ -7,7 +7,7 @@ Generated with the Better Design MCP from the catalog's "Ember" base (dark glass
 ## Direction
 
 - **Dark-first, warm graphite.** Surfaces are near-black with a slight warm cast, not pure #000. That keeps OLED glare down in a dim gym, and the warm cast stops the dark from feeling cold.
-- **One loud color.** Ember orange marks the main action and nothing else, so you can find it in a glance between sets. Everything else stays neutral.
+- **One loud color.** Blue marks the main action and nothing else, so you can find it in a glance between sets. Everything else stays neutral.
 - **Numbers are the content.** Weight, reps and the timer are the largest text on screen, in tabular figures so they don't jitter while editing.
 - **Glass only where the system puts it:** tab bar, navigation bars, toolbars and floating controls. Cards and lists are solid surfaces.
 
@@ -23,16 +23,16 @@ Source of truth: [`src/theme/tokens.ts`](../src/theme/tokens.ts). Values are RGB
 
 | Token            | Dark      | Light     | Use                                    |
 | ---------------- | --------- | --------- | -------------------------------------- |
-| background       | `#110f0d` | `#f8f6f4` | Screen                                 |
-| surface          | `#1c1a18` | `#ffffff` | Cards, set rows                        |
-| surface-raised   | `#272421` | `#f2f0ed` | Inputs, steppers, pressed rows, sheets |
+| background       | `#000000` | `#f2f2f7` | Screen                                 |
+| surface          | `#161618` | `#ffffff` | Cards, set rows                        |
+| surface-raised   | `#262629` | `#e5e5ea` | Inputs, steppers, pressed rows, sheets |
 | foreground       | `#f3f2ee` | `#1a1815` | Primary text                           |
 | muted-foreground | `#a9a49c` | `#5f5a54` | Secondary text, "previous" values      |
 | border           | `#302d2b` | `#e3e1de` | Dividers (decorative)                  |
 | border-strong    | `#74716c` | `#898581` | Input and control edges (≥ 3:1)        |
-| primary          | `#ca4500` | `#c64100` | Main button fill, completed-set fill   |
+| primary          | `#0071e3` | `#0066cc` | Main button fill, completed-set fill   |
 | on-primary       | `#fffdfa` | `#fffdfa` | Text/icon on primary                   |
-| primary-text     | `#fa8746` | `#b53900` | Accent text and icons on surfaces      |
+| primary-text     | `#409cff` | `#005ebd` | Accent text and icons on surfaces      |
 | destructive      | `#cc2827` | `#c51e21` | Destructive button fill                |
 | on-destructive   | `#fffbfa` | `#fffbfa` | Text on destructive                    |
 | destructive-text | `#f66d67` | `#b7191c` | Error text                             |
@@ -161,6 +161,8 @@ Better Design rules used so far: dark-mode elevation, tap targets, color contras
 
 The muscle map on the workout screen uses the front and back figures from [react-native-body-highlighter](https://github.com/HichamELBSI/react-native-body-highlighter) 3.2 (MIT, © 2022 ELABBASSI Hicham). `src/features/workouts/body-map.tsx` maps our muscle groups to its slugs (shoulders → deltoids, lats → upper back, abductors → glutes) and tints worked muscles with the accent color in three steps, by sets relative to the most-worked muscle.
 
-## Workout palette
+## Palette and Liquid Glass
 
-The live workout screens (logging, its exercise picker and settings) use a third palette, `workout`: black background, blue accent, green completed sets. It is applied with `SchemeScope` from `src/theme/theme-root.tsx`, so shared components restyle without changes. All three palettes are checked for WCAG AA text contrast in `tokens.test.ts`.
+The whole app uses one blue-and-black palette (it started as the workout screen's). Light and dark are checked for WCAG AA text contrast in `tokens.test.ts`.
+
+On iOS 26 with Liquid Glass available and Reduce Transparency off (`useGlass`), `Button`, `Chip` and `Sheet` render as `GlassView` (primary buttons and selected chips tinted blue). Native tabs, headers, toolbars, the rest bar and the workout accessory are glass too. Content cards stay solid, as Apple's guidelines reserve glass for controls and floating layers. Android and older iOS use the solid styles.

@@ -1,6 +1,5 @@
 import { GlassView } from 'expo-glass-effect';
 import { useKeepAwake } from 'expo-keep-awake';
-import { StatusBar } from 'expo-status-bar';
 import { router, Stack } from 'expo-router';
 import { Barbell, CaretDown, Plus, Timer } from 'phosphor-react-native';
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
@@ -13,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet } from '@/components/ui/sheet';
 import type { Muscle } from '@/db/schema';
 import { ExerciseEditor } from '@/features/routines/exercise-editor';
-import { exportToHealth, syncHealth } from '@/features/health/sync';
+import { finishWatchWorkout } from '@/features/watch/shortcuts';
 import { BodyMap } from '@/features/workouts/body-map';
 import { completeSet } from '@/features/workouts/complete-set';
 import { finishWorkout, hasDoneSets, previousSets } from '@/features/workouts/data';
@@ -31,19 +30,11 @@ import type { DraftExercise, DraftSet } from '@/stores/exercise-draft';
 import { usePreferences } from '@/stores/preferences';
 import { useWorkout } from '@/stores/workout';
 import { fontFamily, hex } from '@/theme/tokens';
-import { SchemeScope, useScheme } from '@/theme/theme-root';
+import { useScheme } from '@/theme/theme-root';
 
 const MANUAL_REST = [30, 60, 90, 120, 180, 300];
 
 export default function WorkoutScreen() {
-  return (
-    <SchemeScope scheme="workout">
-      <WorkoutPage />
-    </SchemeScope>
-  );
-}
-
-function WorkoutPage() {
   useKeepAwake();
   const { t } = useTranslation();
   const scheme = useScheme();
@@ -109,9 +100,10 @@ function WorkoutPage() {
       {
         text: t('workout.finish'),
         onPress: () => {
-          const id = finishWorkout(workout, units, Date.now());
+          const endedAt = Date.now();
+          const id = finishWorkout(workout, units, endedAt);
           close();
-          exportToHealth(id).then(syncHealth);
+          finishWatchWorkout(id, workout.startedAt, endedAt);
         },
       },
     ]);
@@ -121,7 +113,6 @@ function WorkoutPage() {
 
   return (
     <View style={{ paddingTop: nativeToolbar ? 0 : insets.top }} className="flex-1 bg-background">
-      <StatusBar style="light" />
       {nativeToolbar ? (
         <>
           <Stack.Screen
@@ -375,7 +366,7 @@ function RestBar({ endsAt, total }: { endsAt: number; total: number }) {
         style={{ paddingBottom: insets.bottom + 8 }}
         className="absolute bottom-0 left-0 right-0 px-3"
       >
-        <GlassView colorScheme="dark" style={{ borderRadius: 32 }}>
+        <GlassView style={{ borderRadius: 32 }}>
           <View className="gap-4 px-4 pb-4">{content}</View>
         </GlassView>
       </View>

@@ -15,7 +15,6 @@ import { Text, View } from 'react-native';
 import { db } from '@/db/client';
 import migrations from '@/db/migrations/migrations';
 import { seedExercises } from '@/db/seed/run-seed';
-import { startHealthSync } from '@/features/health/sync';
 import { startWidgetSync } from '@/features/widgets/sync';
 import { resolveLocale } from '@/i18n';
 import { usePreferences } from '@/stores/preferences';
@@ -43,7 +42,6 @@ export default function RootLayout() {
         () => {
           setBoot({ done: true });
           startWidgetSync();
-          startHealthSync();
         },
         (e: unknown) => {
           console.error('Boot failed', e);
@@ -69,6 +67,7 @@ export default function RootLayout() {
       ) : (
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="watch-data" options={{ animation: 'none' }} />
           <Stack.Screen
             name="exercise/filter"
             options={{

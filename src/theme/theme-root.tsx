@@ -1,20 +1,16 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { vars } from 'nativewind';
-import { createContext, type ReactNode, useContext, useEffect, useMemo } from 'react';
+import { type ReactNode, useEffect, useMemo } from 'react';
 import { Appearance, useColorScheme, View } from 'react-native';
 
 import { usePreferences } from '@/stores/preferences';
 
 import { type ColorScheme, cssVars, hex } from './tokens';
 
-const SchemeOverride = createContext<ColorScheme | null>(null);
-
 export function useScheme(): ColorScheme {
-  const override = useContext(SchemeOverride);
   const preference = usePreferences((s) => s.theme);
   const system = useColorScheme();
-  if (override) return override;
   if (preference !== 'system') return preference;
   return system === 'light' ? 'light' : 'dark';
 }
@@ -50,15 +46,5 @@ export function ThemeRoot({ children }: { children: ReactNode }) {
         {children}
       </View>
     </ThemeProvider>
-  );
-}
-
-export function SchemeScope({ scheme, children }: { scheme: ColorScheme; children: ReactNode }) {
-  return (
-    <SchemeOverride.Provider value={scheme}>
-      <View style={vars(cssVars(scheme))} className="flex-1 bg-background">
-        {children}
-      </View>
-    </SchemeOverride.Provider>
   );
 }

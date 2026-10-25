@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "repforge",
     "userInterfaceStyle": "automatic",
-    "backgroundColor": "#110f0d",
+    "backgroundColor": "#000000",
     "ios": {
       "bundleIdentifier": "dev.gabs.repforge",
       "supportsTablet": false
@@ -15,7 +15,7 @@
     "android": {
       "package": "dev.gabs.repforge",
       "adaptiveIcon": {
-        "backgroundColor": "#110f0d",
+        "backgroundColor": "#000000",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -39,7 +39,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#110f0d",
+          "backgroundColor": "#000000",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
@@ -49,7 +49,7 @@
       [
         "expo-notifications",
         {
-          "color": "#ca4500"
+          "color": "#0071e3"
         }
       ],
       "expo-sharing",
@@ -119,14 +119,6 @@
               }
             }
           ]
-        }
-      ],
-      [
-        "@kingstinct/react-native-healthkit",
-        {
-          "NSHealthShareUsageDescription": "Repforge reads your Apple Watch workouts, heart rate and active calories to add them to the workouts you log.",
-          "NSHealthUpdateUsageDescription": "Repforge saves your finished workouts to Apple Health when you turn it on.",
-          "background": true
         }
       ]
     ],

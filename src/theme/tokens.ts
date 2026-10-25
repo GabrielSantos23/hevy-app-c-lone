@@ -1,4 +1,4 @@
-export type ColorScheme = 'light' | 'dark' | 'workout';
+export type ColorScheme = 'light' | 'dark';
 
 export const colorTokens = [
   'background',
@@ -28,27 +28,6 @@ type Rgb = readonly [number, number, number];
 
 export const palette: Record<ColorScheme, Record<ColorToken, Rgb>> = {
   dark: {
-    background: [17, 15, 13],
-    surface: [28, 26, 24],
-    'surface-raised': [39, 36, 33],
-    foreground: [243, 242, 238],
-    'muted-foreground': [169, 164, 156],
-    border: [48, 45, 43],
-    'border-strong': [116, 113, 108],
-    primary: [202, 69, 0],
-    'on-primary': [255, 253, 250],
-    'primary-text': [250, 135, 70],
-    destructive: [204, 40, 39],
-    'on-destructive': [255, 251, 250],
-    'destructive-text': [246, 109, 103],
-    success: [75, 198, 128],
-    warning: [237, 179, 69],
-    'set-warmup': [237, 179, 69],
-    'set-dropset': [171, 145, 242],
-    'set-failure': [246, 109, 103],
-    superset: [70, 198, 205],
-  },
-  workout: {
     background: [0, 0, 0],
     surface: [22, 22, 24],
     'surface-raised': [38, 38, 41],
@@ -70,25 +49,25 @@ export const palette: Record<ColorScheme, Record<ColorToken, Rgb>> = {
     superset: [100, 210, 255],
   },
   light: {
-    background: [248, 246, 244],
+    background: [242, 242, 247],
     surface: [255, 255, 255],
-    'surface-raised': [242, 240, 237],
-    foreground: [26, 24, 21],
-    'muted-foreground': [95, 90, 84],
-    border: [227, 225, 222],
-    'border-strong': [137, 133, 129],
-    primary: [198, 65, 0],
-    'on-primary': [255, 253, 250],
-    'primary-text': [181, 57, 0],
+    'surface-raised': [229, 229, 234],
+    foreground: [0, 0, 0],
+    'muted-foreground': [92, 92, 97],
+    border: [216, 216, 220],
+    'border-strong': [130, 130, 135],
+    primary: [0, 102, 204],
+    'on-primary': [255, 255, 255],
+    'primary-text': [0, 94, 189],
     destructive: [197, 30, 33],
-    'on-destructive': [255, 251, 250],
-    'destructive-text': [183, 25, 28],
+    'on-destructive': [255, 255, 255],
+    'destructive-text': [175, 22, 26],
     success: [0, 120, 64],
     warning: [157, 99, 0],
     'set-warmup': [157, 99, 0],
     'set-dropset': [109, 71, 184],
-    'set-failure': [183, 25, 28],
-    superset: [0, 114, 119],
+    'set-failure': [175, 22, 26],
+    superset: [0, 110, 140],
   },
 };
 

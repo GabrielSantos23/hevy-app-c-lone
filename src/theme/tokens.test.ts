@@ -2,7 +2,7 @@ import { colorTokens, cssVars, hex, palette } from './tokens';
 
 describe('tokens', () => {
   it('defines every color token in both schemes', () => {
-    for (const scheme of ['dark', 'light', 'workout'] as const) {
+    for (const scheme of ['dark', 'light'] as const) {
       expect(Object.keys(palette[scheme]).sort()).toEqual([...colorTokens].sort());
     }
   });
@@ -19,7 +19,7 @@ describe('tokens', () => {
       const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
       return (hi + 0.05) / (lo + 0.05);
     };
-    for (const scheme of ['dark', 'light', 'workout'] as const) {
+    for (const scheme of ['dark', 'light'] as const) {
       const p = palette[scheme];
       expect(ratio(p.foreground, p.background)).toBeGreaterThanOrEqual(4.5);
       expect(ratio(p['muted-foreground'], p.background)).toBeGreaterThanOrEqual(4.5);
@@ -31,7 +31,7 @@ describe('tokens', () => {
   });
 
   it('formats hex and css variable values', () => {
-    expect(hex('dark', 'primary')).toBe('#ca4500');
+    expect(hex('dark', 'primary')).toBe('#0071e3');
     expect(cssVars('light')['--color-surface']).toBe('255 255 255');
   });
 });
