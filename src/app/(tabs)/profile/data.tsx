@@ -24,6 +24,7 @@ import {
   undoImport,
 } from '@/features/csv/data';
 import { useHevyRoutineImport } from '@/features/hevy/import-routine';
+import { widgetStatus } from '@/features/widgets/sync';
 import { usePreferences } from '@/stores/preferences';
 import { hex } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
@@ -115,6 +116,7 @@ export default function DataScreen() {
     ]);
 
   const run = (task: () => Promise<void>) => () => task().catch(fail);
+  const widgets = widgetStatus();
 
   return (
     <Screen>
@@ -184,6 +186,14 @@ export default function DataScreen() {
             onPress={run(() => exportMeasurements(units))}
           />
         </Section>
+
+        {widgets ? (
+          <Section title={t('data.widgetsTitle')} body={t('data.widgetsBody')}>
+            <Text selectable className="font-regular text-footnote text-muted-foreground">
+              {widgets}
+            </Text>
+          </Section>
+        ) : null}
       </View>
     </Screen>
   );

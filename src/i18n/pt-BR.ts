@@ -369,6 +369,8 @@ const ptBR: Translation = {
   },
   data: {
     hevyReading: 'Lendo a rotina…',
+    widgetsTitle: 'Widgets',
+    widgetsBody: 'De onde os widgets da tela inicial leem seus dados. Envie isto se eles mostrarem dados de exemplo.',
     hevyTitle: 'Rotina do Hevy',
     hevyBody:
       'Cole o link de uma rotina do Hevy (Compartilhar → Copiar link). Vêm séries e repetições; as cargas não aparecem na página.',

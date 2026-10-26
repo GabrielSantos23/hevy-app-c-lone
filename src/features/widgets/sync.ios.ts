@@ -117,6 +117,16 @@ function activitySync(
 }
 
 let started = false;
+let lastError: string | null = null;
+
+// Where widget data is stored and whether the last refresh worked, for the Data screen.
+export function widgetStatus() {
+  const native = requireOptionalNativeModule<{ storageStatus?: () => string }>('ExpoWidgets');
+  if (!native) return null;
+  const storage = native.storageStatus?.() ?? '?';
+  return lastError ? `${storage}
+${lastError}` : storage;
+}
 
 export function startWidgetSync() {
   if (started || !requireOptionalNativeModule('ExpoWidgets')) return;
@@ -130,7 +140,10 @@ export function startWidgetSync() {
     pending = setTimeout(() => {
       try {
         refreshWidgets(widgets);
-      } catch {}
+        lastError = null;
+      } catch (e) {
+        lastError = e instanceof Error ? e.message : String(e);
+      }
     }, 1500);
   };
   const tables = [...historyTables, ...routineTables];

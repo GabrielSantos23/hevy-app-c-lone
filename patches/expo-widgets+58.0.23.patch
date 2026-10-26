@@ -109,11 +109,26 @@ index f499bdc..4ad8723 100644
        return [:]
      }
  
+diff --git a/node_modules/expo-widgets/ios/WidgetsModule.swift b/node_modules/expo-widgets/ios/WidgetsModule.swift
+index 285136b..c59973d 100644
+--- a/node_modules/expo-widgets/ios/WidgetsModule.swift
++++ b/node_modules/expo-widgets/ios/WidgetsModule.swift
+@@ -63,6 +63,10 @@ public final class WidgetsModule: Module {
+       WidgetCenter.shared.reloadAllTimelines()
+     }
+ 
++    Function("storageStatus") { () -> String in
++      WidgetsStorage.status()
++    }
++
+     Class("Widget", WidgetObject.self) {
+       Constructor { (name: String, layout: String, initialProps: [String: Any]?) in
+         WidgetObject(name: name, layout: layout, initialProps: initialProps)
 diff --git a/node_modules/expo-widgets/ios/WidgetsStorage.swift b/node_modules/expo-widgets/ios/WidgetsStorage.swift
-index 86f9d6c..9d27386 100644
+index 86f9d6c..2b472a8 100644
 --- a/node_modules/expo-widgets/ios/WidgetsStorage.swift
 +++ b/node_modules/expo-widgets/ios/WidgetsStorage.swift
-@@ -1,58 +1,131 @@
+@@ -1,58 +1,175 @@
 +import Foundation
 +import Security
 +
@@ -142,7 +157,51 @@ index 86f9d6c..9d27386 100644
 +          let configuredGroup, configuredGroup.hasPrefix("group.") else {
 +      return nil
 +    }
-+    return team + "." + configuredGroup.dropFirst("group.".count)
++    // SideStore may sign a renamed group (e.g. with its team suffix), so take the first one the keychain accepts.
++    let candidates = [team + "." + configuredGroup.dropFirst("group.".count), signedKeychainGroup()].compactMap { $0 }
++    return candidates.first(where: canWrite) ?? candidates.first
++  }
++
++  private static func probeQuery(_ group: String?) -> [String: Any] {
++    var query: [String: Any] = [
++      kSecClass as String: kSecClassGenericPassword,
++      kSecAttrService as String: "expo-widgets-probe",
++      kSecAttrAccount as String: "probe",
++    ]
++    if let group { query[kSecAttrAccessGroup as String] = group }
++    return query
++  }
++
++  private static func canWrite(_ group: String) -> Bool {
++    let query = probeQuery(group)
++    SecItemDelete(query as CFDictionary)
++    let status = SecItemAdd(query.merging([kSecValueData as String: Data()]) { $1 } as CFDictionary, nil)
++    SecItemDelete(query as CFDictionary)
++    return status == errSecSuccess || status == errSecDuplicateItem
++  }
++
++  // The first keychain-access-groups entry as actually signed: items added without a group land there.
++  private static func signedKeychainGroup() -> String? {
++    let query = probeQuery(nil)
++    SecItemDelete(query as CFDictionary)
++    var result: CFTypeRef?
++    let status = SecItemAdd(
++      query.merging([kSecValueData as String: Data(), kSecReturnAttributes as String: true]) { $1 } as CFDictionary,
++      &result
++    )
++    SecItemDelete(query as CFDictionary)
++    guard status == errSecSuccess else { return nil }
++    return (result as? [String: Any])?[kSecAttrAccessGroup as String] as? String
++  }
++
++  public static func status() -> String {
++    if let keychainGroup {
++      let signed = signedKeychainGroup() ?? "?"
++      return "keychain \(keychainGroup): \(canWrite(keychainGroup) ? "ok" : "no access") (signed \(signed))"
++    }
++    guard let appGroupIdentifier else { return "no shared storage" }
++    let ok = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) != nil
++    return "app group \(appGroupIdentifier): \(ok ? "ok" : "no access")"
 +  }
 +
 +  private static func provisioningProfile() -> [String: Any]? {

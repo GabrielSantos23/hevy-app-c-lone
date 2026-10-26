@@ -367,6 +367,8 @@ const en = {
   },
   data: {
     hevyReading: 'Reading the routine…',
+    widgetsTitle: 'Widgets',
+    widgetsBody: 'Where the home screen widgets read your data from. Send this if they show sample data.',
     hevyTitle: 'Routine from Hevy',
     hevyBody:
       'Paste the link of a Hevy routine (Share → Copy link). Sets and reps come along; weights are not on the page.',
