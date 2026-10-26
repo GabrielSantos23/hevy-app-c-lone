@@ -366,6 +366,7 @@ const en = {
     },
   },
   data: {
+    hevyReading: 'Reading the routine…',
     hevyTitle: 'Routine from Hevy',
     hevyBody:
       'Paste the link of a Hevy routine (Share → Copy link). Sets and reps come along; weights are not on the page.',

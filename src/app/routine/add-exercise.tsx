@@ -53,7 +53,6 @@ function AddExerciseScreen({ target }: { target?: 'routine' | 'workout' }) {
     router.back();
   };
 
-  // Inside the list header: a formSheet hides views placed above its scroll view.
   const header = (
     <View className="gap-4 px-4 pb-1 pt-5">
       <View className="flex-row items-center justify-between">
@@ -96,7 +95,8 @@ function AddExerciseScreen({ target }: { target?: 'routine' | 'workout' }) {
 
   return (
     <View className="flex-1 bg-background">
-      <ExerciseList onSelect={toggle} selectedIds={selectedIds} header={header} />
+      {header}
+      <ExerciseList onSelect={toggle} selectedIds={selectedIds} />
       <View className="gap-2 border-t border-border bg-surface-raised px-4 pb-6 pt-3">
         {picked.length === 0 ? (
           <Text className="text-center font-regular text-footnote text-muted-foreground">

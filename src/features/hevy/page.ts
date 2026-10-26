@@ -39,6 +39,6 @@ export function parseRoutinePage(title: string, text: string): HevyRoutine {
 }
 
 export const routineUrl = (input: string) => {
-  const m = input.match(/hevy\.com\/routine\/([A-Za-z0-9_-]+)/);
+  const m = input.match(/hevy\.com\/routine\/([A-Za-z0-9_-]+)/i);
   return m ? `https://hevy.com/routine/${m[1]}` : null;
 };

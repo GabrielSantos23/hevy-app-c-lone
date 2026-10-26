@@ -14,6 +14,7 @@ type TextPromptProps = {
   confirmLabel: string;
   onSubmit: (value: string) => void;
   onClose: () => void;
+  autoCapitalize?: 'none' | 'words';
 };
 
 export function TextPrompt({
@@ -23,6 +24,7 @@ export function TextPrompt({
   confirmLabel,
   onSubmit,
   onClose,
+  autoCapitalize = 'words',
 }: TextPromptProps) {
   const { t } = useTranslation();
   const scheme = useScheme();
@@ -54,7 +56,8 @@ export function TextPrompt({
               onChangeText={setValue}
               onSubmitEditing={submit}
               returnKeyType="done"
-              autoCapitalize="words"
+              autoCapitalize={autoCapitalize}
+              autoCorrect={autoCapitalize !== 'none'}
               placeholderTextColor={hex(scheme, 'muted-foreground')}
               className="min-h-log rounded-md border border-border-strong bg-surface px-4 font-regular text-body text-foreground"
             />

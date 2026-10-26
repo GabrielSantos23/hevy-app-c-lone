@@ -44,6 +44,9 @@ describe('routineUrl', () => {
     expect(routineUrl('Look: https://hevy.com/routine/rSjshpFq9mZ ok')).toBe(
       'https://hevy.com/routine/rSjshpFq9mZ',
     );
+    expect(routineUrl('Https://Hevy.com/Routine/rSjshpFq9mZ')).toBe(
+      'https://hevy.com/routine/rSjshpFq9mZ',
+    );
     expect(routineUrl('https://example.com')).toBeNull();
   });
 });

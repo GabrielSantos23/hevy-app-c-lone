@@ -76,14 +76,7 @@ export default function RootLayout() {
               sheetGrabberVisible: true,
             }}
           />
-          <Stack.Screen
-            name="routine/add-exercise"
-            options={{
-              presentation: 'formSheet',
-              sheetAllowedDetents: [1],
-              sheetGrabberVisible: true,
-            }}
-          />
+          <Stack.Screen name="routine/add-exercise" options={{ presentation: 'modal' }} />
           <Stack.Screen
             name="workout/index"
             options={{ animation: 'slide_from_bottom', gestureEnabled: false }}

@@ -113,6 +113,7 @@ export default function WorkoutScreen() {
   const close = () => {
     stopRest();
     useWorkout.getState().end();
+    stopWatchWorkout();
   };
 
   const discard = () =>

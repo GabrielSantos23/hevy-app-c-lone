@@ -368,6 +368,7 @@ const ptBR: Translation = {
     },
   },
   data: {
+    hevyReading: 'Lendo a rotina…',
     hevyTitle: 'Rotina do Hevy',
     hevyBody:
       'Cole o link de uma rotina do Hevy (Compartilhar → Copiar link). Vêm séries e repetições; as cargas não aparecem na página.',

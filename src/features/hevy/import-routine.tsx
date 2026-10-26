@@ -18,12 +18,20 @@ export function useHevyRoutineImport() {
 
   const read = (link: string) => {
     const url = routineUrl(link);
-    if (url) setReading(url);
+    // Wait for the link prompt to finish closing: iOS drops a modal opened during that.
+    if (url) setTimeout(() => setReading(url), 500);
     else Alert.alert(t('data.errorTitle'), t('data.hevyBadLink'));
   };
 
-  const onPage = (page: { title: string; text: string }) => {
+  // Alerts wait for the reading sheet to close, for the same reason.
+  const closeThen = (fn: () => void) => {
     setReading(null);
+    setTimeout(fn, 500);
+  };
+
+  const onPage = (page: { title: string; text: string }) => closeThen(() => showRoutine(page));
+
+  const showRoutine = (page: { title: string; text: string }) => {
     const routine = parseRoutinePage(page.title, page.text);
     if (!routine.exercises.length) {
       Alert.alert(t('data.errorTitle'), t('data.hevyEmpty'));
@@ -63,6 +71,7 @@ export function useHevyRoutineImport() {
           initial=""
           confirmLabel={t('data.import')}
           onSubmit={read}
+          autoCapitalize="none"
           onClose={() => setPrompt(false)}
         />
       ) : null}
@@ -70,10 +79,9 @@ export function useHevyRoutineImport() {
         <RoutinePageReader
           url={reading}
           onRead={onPage}
-          onError={() => {
-            setReading(null);
-            Alert.alert(t('data.errorTitle'), t('data.hevyLoadError'));
-          }}
+          onError={() =>
+            closeThen(() => Alert.alert(t('data.errorTitle'), t('data.hevyLoadError')))
+          }
         />
       ) : null}
     </>
