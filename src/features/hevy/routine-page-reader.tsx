@@ -16,9 +16,13 @@ const READ_TEXT = `
   if (window.__repforgeReading) return;
   window.__repforgeReading = true;
   var tries = 0;
+  var seen = 0;
   var timer = setInterval(function () {
+    // Scroll so a list that only draws what is on screen renders every exercise.
+    window.scrollTo(0, document.body ? document.body.scrollHeight : 0);
     var text = document.body ? document.body.innerText : '';
-    if (/\\d+\\s+\\S+\\s*·\\s*\\d+/.test(text) || ++tries > 40) {
+    var found = /\\d+\\s+\\S+\\s*[·•|]\\s*\\d+/.test(text);
+    if ((found && ++seen > 4) || ++tries > 40) {
       clearInterval(timer);
       window.ReactNativeWebView.postMessage(JSON.stringify({ title: document.title, text: text }));
     }
@@ -54,12 +58,18 @@ export function RoutinePageReader({
 
   return (
     <Sheet title={t('data.hevyReading')} visible onClose={() => finish(onError)}>
-      <View className="items-center gap-3 px-4 pb-4 pt-2">
+      <View className="flex-row items-center justify-center gap-3 px-4 pb-3 pt-1">
         <ActivityIndicator color={hex(scheme, 'primary-text')} />
-        <Text className="text-center font-regular text-body text-muted-foreground">{url}</Text>
+        <Text numberOfLines={1} className="shrink font-regular text-footnote text-muted-foreground">
+          {url}
+        </Text>
       </View>
-      {/* Kept on screen (tiny) so iOS keeps running the page's scripts. */}
-      <View style={{ height: 2, width: '100%' }}>
+      {/* Shown at a real size: the page only draws the exercises that fit on screen. */}
+      <View
+        pointerEvents="none"
+        style={{ height: 360 }}
+        className="mx-2 mb-2 overflow-hidden rounded-lg"
+      >
         <WebView
           ref={web}
           // English names match the exercise library best.

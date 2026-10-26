@@ -34,7 +34,9 @@ export function useHevyRoutineImport() {
   const showRoutine = (page: { title: string; text: string }) => {
     const routine = parseRoutinePage(page.title, page.text);
     if (!routine.exercises.length) {
-      Alert.alert(t('data.errorTitle'), t('data.hevyEmpty'));
+      // The start of the page text tells what the page showed instead.
+      const seen = page.text.replace(/\s+/g, ' ').trim().slice(0, 160);
+      Alert.alert(t('data.errorTitle'), `${t('data.hevyEmpty')}\n\n${seen || page.title}`);
       return;
     }
     Alert.alert(
