@@ -83,6 +83,16 @@ jobs:
           codesign --force --sign - --entitlements keychain.entitlements sidestore.app
           package sidestore.app Repforge-sidestore.ipa
 
+          # Same as above plus HealthKit, to test whether SideStore's free signing keeps it.
+          cp keychain.entitlements health.entitlements
+          /usr/libexec/PlistBuddy \
+            -c "Add :com.apple.developer.healthkit bool true" \
+            -c "Add :com.apple.developer.healthkit.access array" \
+            health.entitlements
+          cp -R sidestore.app health.app
+          codesign --force --sign - --entitlements health.entitlements health.app
+          package health.app Repforge-sidestore-healthkit.ipa
+
       - uses: actions/upload-artifact@v5
         with:
           name: Repforge-ipa

@@ -371,6 +371,9 @@ const en = {
   },
   data: {
     hevyReading: 'Reading the routine…',
+    healthTitle: 'Apple Health (test)',
+    healthBody: 'Checks whether this build can read your Apple Watch workouts from Health.',
+    healthTest: 'Test Health access',
     widgetsTitle: 'Widgets',
     widgetsBody:
       'Where the home screen widgets read your data from. Send this if they show sample data.',

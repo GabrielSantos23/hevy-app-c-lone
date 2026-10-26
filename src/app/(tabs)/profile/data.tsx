@@ -29,6 +29,8 @@ import { usePreferences } from '@/stores/preferences';
 import { hex } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
 
+import { healthProbe } from '../../../../modules/health-probe';
+
 export default function DataScreen() {
   const { t, i18n } = useTranslation();
   const scheme = useScheme();
@@ -186,6 +188,21 @@ export default function DataScreen() {
             onPress={run(() => exportMeasurements(units))}
           />
         </Section>
+
+        {healthProbe ? (
+          <Section title={t('data.healthTitle')} body={t('data.healthBody')}>
+            <Button
+              label={t('data.healthTest')}
+              variant="secondary"
+              onPress={() =>
+                healthProbe
+                  ?.probe()
+                  .then((r) => Alert.alert(t('data.healthTitle'), r))
+                  .catch(fail)
+              }
+            />
+          </Section>
+        ) : null}
 
         {widgets ? (
           <Section title={t('data.widgetsTitle')} body={t('data.widgetsBody')}>

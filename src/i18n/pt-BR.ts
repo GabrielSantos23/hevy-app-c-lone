@@ -373,6 +373,9 @@ const ptBR: Translation = {
   },
   data: {
     hevyReading: 'Lendo a rotina…',
+    healthTitle: 'Apple Saúde (teste)',
+    healthBody: 'Verifica se esta build consegue ler do Saúde os treinos do Apple Watch.',
+    healthTest: 'Testar acesso ao Saúde',
     widgetsTitle: 'Widgets',
     widgetsBody:
       'De onde os widgets da tela inicial leem seus dados. Envie isto se eles mostrarem dados de exemplo.',
