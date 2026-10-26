@@ -49,7 +49,4 @@ decompiled/
 extracted/
 reverse/
 
-# exercise media generated from a local GIF folder (not openly licensed)
-assets/exercise-media/
-src/features/exercises/media.generated.ts
 *.ipa
