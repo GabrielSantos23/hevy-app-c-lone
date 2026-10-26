@@ -23,5 +23,6 @@ export function startWatchWorkout() {
 }
 
 export function stopWatchWorkout() {
+  if (!enabled()) return;
   run(STOP_SHORTCUT, { 'x-success': 'repforge://', 'x-error': 'repforge://' });
 }

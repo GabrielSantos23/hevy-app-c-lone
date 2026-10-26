@@ -45,8 +45,8 @@ export function ExerciseList({ onSelect, header, selectedIds }: ExerciseListProp
       getItemLayout={(_, index) => ({ length: ROW_HEIGHT, offset: ROW_HEIGHT * index, index })}
       ListHeaderComponent={
         <View>
-          <FilterButtons />
           {header}
+          <FilterButtons />
         </View>
       }
       ListEmptyComponent={

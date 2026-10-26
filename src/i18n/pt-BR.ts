@@ -14,6 +14,7 @@ const ptBR: Translation = {
     profile: 'Perfil',
   },
   train: {
+    importHevy: 'Importar do Hevy',
     routines: 'Rotinas',
     myRoutines: 'Minhas rotinas ({{count}})',
     startEmpty: 'Começar treino vazio',
@@ -175,8 +176,8 @@ const ptBR: Translation = {
     doneBody: 'Hora da próxima série.',
   },
   exercisePicker: {
-    create: 'Novo exercício',
-    title: 'Adicionar exercícios',
+    create: 'Criar',
+    title: 'Adicionar exercício',
     add_one: 'Adicionar {{count}} exercício',
     add_other: 'Adicionar {{count}} exercícios',
     none: 'Toque nos exercícios para selecionar',

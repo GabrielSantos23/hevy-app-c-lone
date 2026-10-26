@@ -12,6 +12,7 @@ const en = {
     profile: 'Profile',
   },
   train: {
+    importHevy: 'Import from Hevy',
     routines: 'Routines',
     myRoutines: 'My Routines ({{count}})',
     startEmpty: 'Start empty workout',
@@ -173,8 +174,8 @@ const en = {
     doneBody: 'Time for your next set.',
   },
   exercisePicker: {
-    create: 'New exercise',
-    title: 'Add exercises',
+    create: 'Create',
+    title: 'Add exercise',
     add_one: 'Add {{count}} exercise',
     add_other: 'Add {{count}} exercises',
     none: 'Tap exercises to select them',

@@ -3,6 +3,7 @@ import {
   CaretDown,
   CaretRight,
   ClipboardText,
+  DownloadSimple,
   DotsThree,
   FolderSimplePlus,
   Plus,
@@ -18,6 +19,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { TextPrompt } from '@/components/ui/text-prompt';
 import { useDbQuery } from '@/db/use-db-query';
 import { useExerciseName } from '@/features/exercises/display';
+import { useHevyRoutineImport } from '@/features/hevy/import-routine';
 import {
   createFolder,
   deleteFolder,
@@ -54,6 +56,7 @@ type Prompt = { kind: 'create' } | { kind: 'rename'; folder: Folder };
 export default function TrainScreen() {
   const { t } = useTranslation();
   const scheme = useScheme();
+  const hevy = useHevyRoutineImport();
   const { folders, routines } = useDbQuery(routineList, routineTables);
   const weightUnit = usePreferences((s) => s.weightUnit);
   const distanceUnit = usePreferences((s) => s.distanceUnit);
@@ -203,12 +206,20 @@ export default function TrainScreen() {
           title={t('train.emptyTitle')}
           body={t('train.emptyBody')}
           action={
-            <Button
-              label={t('train.newRoutine')}
-              variant="secondary"
-              size="lg"
-              onPress={() => newRoutine(null)}
-            />
+            <View className="gap-3">
+              <Button
+                label={t('train.newRoutine')}
+                variant="secondary"
+                size="lg"
+                onPress={() => newRoutine(null)}
+              />
+              <Button
+                label={t('train.importHevy')}
+                variant="secondary"
+                size="lg"
+                onPress={hevy.open}
+              />
+            </View>
           }
         />
       ) : (
@@ -226,12 +237,24 @@ export default function TrainScreen() {
               <FolderSimplePlus size={26} color={hex(scheme, 'foreground')} />
             </Pressable>
           </View>
-          <Button
-            label={t('train.newRoutine')}
-            variant="secondary"
-            icon={<ClipboardText size={22} color={hex(scheme, 'foreground')} />}
-            onPress={() => newRoutine(null)}
-          />
+          <View className="flex-row gap-3">
+            <View className="flex-1">
+              <Button
+                label={t('train.newRoutine')}
+                variant="secondary"
+                icon={<ClipboardText size={22} color={hex(scheme, 'foreground')} />}
+                onPress={() => newRoutine(null)}
+              />
+            </View>
+            <View className="flex-1">
+              <Button
+                label={t('train.importHevy')}
+                variant="secondary"
+                icon={<DownloadSimple size={22} color={hex(scheme, 'foreground')} />}
+                onPress={hevy.open}
+              />
+            </View>
+          </View>
 
           {ungrouped.length ? (
             <Section title={t('train.myRoutines', { count: ungrouped.length })}>
@@ -277,6 +300,7 @@ export default function TrainScreen() {
         </View>
       )}
 
+      {hevy.element}
       <ActionSheet
         visible={sheetProps !== null}
         title={sheetProps?.title}

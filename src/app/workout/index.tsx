@@ -13,7 +13,7 @@ import { Sheet } from '@/components/ui/sheet';
 import type { Muscle } from '@/db/schema';
 import { ExerciseEditor } from '@/features/routines/exercise-editor';
 import type { UnitPrefs } from '@/features/routines/convert';
-import { repforgeWorkoutFinished } from '@/features/watch/sync';
+import { stopWatchWorkout } from '@/features/watch/shortcuts';
 import { BodyMap } from '@/features/workouts/body-map';
 import { ClockSheet } from '@/features/workouts/clock-sheet';
 import { completeSet } from '@/features/workouts/complete-set';
@@ -34,24 +34,24 @@ import { useWorkout } from '@/stores/workout';
 import { fontFamily, glassTint, hex } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
 
-function confirmFinish(t: TFunction, units: UnitPrefs) {
+// fromWatch: the Watch workout already ended, so finish without asking and leave the Watch alone.
+function confirmFinish(t: TFunction, units: UnitPrefs, fromWatch = false) {
   const workout = useWorkout.getState().workout;
   if (!workout) return;
   if (!hasDoneSets(workout.exercises)) {
     Alert.alert(t('workout.nothingDoneTitle'), t('workout.nothingDoneBody'));
     return;
   }
+  const done = () => {
+    finishWorkout(workout, units, Date.now());
+    stopRest();
+    useWorkout.getState().end();
+    if (!fromWatch) stopWatchWorkout();
+  };
+  if (fromWatch) return done();
   Alert.alert(t('workout.finishTitle'), undefined, [
     { text: t('workout.keepGoing'), style: 'cancel' },
-    {
-      text: t('workout.finish'),
-      onPress: () => {
-        finishWorkout(workout, units, Date.now());
-        stopRest();
-        useWorkout.getState().end();
-        repforgeWorkoutFinished();
-      },
-    },
+    { text: t('workout.finish'), onPress: done },
   ]);
 }
 
@@ -73,11 +73,11 @@ export default function WorkoutScreen() {
     if (!workout) router.back();
   }, [workout]);
 
-  // The Watch workout ended (watch-sync), so offer to finish this one too.
+  // The Watch workout ended (watch-sync), so this one finishes too.
   const { finish: finishParam } = useLocalSearchParams<{ finish?: string }>();
   const onFinishParam = useEffectEvent(() => {
     router.setParams({ finish: undefined });
-    confirmFinish(t, units);
+    confirmFinish(t, units, true);
   });
   useEffect(() => {
     if (finishParam === '1') onFinishParam();
