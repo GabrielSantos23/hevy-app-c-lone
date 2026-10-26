@@ -11,7 +11,7 @@ try {
   generated = require('./media.generated').media;
 } catch {}
 
-const mediaFor = (exerciseId: string): number | undefined =>
+export const mediaFor = (exerciseId: string): number | undefined =>
   exerciseId.startsWith('seed:') ? generated[exerciseId.slice(5)] : undefined;
 
 export function ExerciseThumb({ exerciseId }: { exerciseId: string }) {

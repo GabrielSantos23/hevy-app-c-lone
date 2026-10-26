@@ -46,10 +46,10 @@ function confirmFinish(t: TFunction, units: UnitPrefs) {
     {
       text: t('workout.finish'),
       onPress: () => {
-        const id = finishWorkout(workout, units, Date.now());
+        finishWorkout(workout, units, Date.now());
         stopRest();
         useWorkout.getState().end();
-        repforgeWorkoutFinished(id, workout.startedAt);
+        repforgeWorkoutFinished();
       },
     },
   ]);

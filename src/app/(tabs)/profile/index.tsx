@@ -1,19 +1,23 @@
 import { router, Stack } from 'expo-router';
-import { CaretRight, FileCsv, Ruler, Watch } from 'phosphor-react-native';
+import { CaretRight, Export, FileCsv, Ruler, Watch } from 'phosphor-react-native';
 import { type ReactNode, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, Text, View } from 'react-native';
 
 import { BarChart } from '@/components/charts';
 import { Screen } from '@/components/screen';
+import { ActionSheet } from '@/components/ui/action-sheet';
 import { Chip } from '@/components/ui/chip';
 import type { Muscle } from '@/db/schema';
 import { useDbQuery } from '@/db/use-db-query';
 import { type WeekBucket, weeklyBuckets } from '@/features/stats/calc';
 import { historyTables, muscleSplit, workoutSummaries } from '@/features/stats/data';
+import { type ReportPeriod, reportPeriods } from '@/features/stats/report';
+import { useShareWorkouts } from '@/features/stats/share';
 import { useWorkoutFormat } from '@/features/stats/workout-card';
 import { BodyMap } from '@/features/workouts/body-map';
 import { formatDurationWords } from '@/features/workouts/stats';
+import { nativeToolbar } from '@/lib/use-glass';
 import { usePreferences } from '@/stores/preferences';
 import { hex } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
@@ -21,6 +25,12 @@ import { useScheme } from '@/theme/theme-root';
 const WEEKS = 12;
 const MUSCLE_DAYS = 30;
 const metrics = ['workouts', 'durationS', 'volume', 'reps'] as const;
+const periods = Object.keys(reportPeriods) as ReportPeriod[];
+const periodIcons = {
+  week: 'calendar',
+  month: 'calendar.badge.clock',
+  year: 'calendar.circle',
+} as const;
 type Metric = (typeof metrics)[number];
 
 export default function ProfileScreen() {
@@ -29,6 +39,8 @@ export default function ProfileScreen() {
   const format = useWorkoutFormat();
   const prefs = usePreferences();
   const [metric, setMetric] = useState<Metric>('workouts');
+  const [shareMenu, setShareMenu] = useState(false);
+  const share = useShareWorkouts();
   const workouts = useDbQuery(
     useCallback(
       () => workoutSummaries(prefs.bodyWeightKg, prefs.countWarmupsInVolume),
@@ -59,7 +71,54 @@ export default function ProfileScreen() {
 
   return (
     <Screen>
-      <Stack.Screen options={{ title: t('profile.title') }} />
+      <Stack.Screen
+        options={{
+          title: t('profile.title'),
+          headerRight: nativeToolbar
+            ? undefined
+            : () => (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={t('share.button')}
+                  onPress={() => setShareMenu(true)}
+                  className="min-h-touch min-w-touch items-center justify-center"
+                >
+                  <Export size={24} color={hex(scheme, 'primary-text')} />
+                </Pressable>
+              ),
+        }}
+      />
+      {nativeToolbar ? (
+        <Stack.Toolbar placement="right">
+          <Stack.Toolbar.Menu icon="square.and.arrow.up" accessibilityLabel={t('share.button')}>
+            {periods.map((p) => (
+              <Stack.Toolbar.Menu key={p} icon={periodIcons[p]} title={t(`share.period.${p}`)}>
+                <Stack.Toolbar.MenuAction icon="doc.text" onPress={() => share(p, 'file')}>
+                  {t('share.file')}
+                </Stack.Toolbar.MenuAction>
+                <Stack.Toolbar.MenuAction icon="sparkles" onPress={() => share(p, 'claude')}>
+                  {t('share.claude')}
+                </Stack.Toolbar.MenuAction>
+              </Stack.Toolbar.Menu>
+            ))}
+          </Stack.Toolbar.Menu>
+        </Stack.Toolbar>
+      ) : (
+        <ActionSheet
+          title={t('share.button')}
+          visible={shareMenu}
+          onClose={() => setShareMenu(false)}
+          actions={periods.flatMap((p) =>
+            (['file', 'claude'] as const).map((target) => ({
+              label: `${t(`share.period.${p}`)} · ${t(`share.${target}`)}`,
+              onPress: () => {
+                setShareMenu(false);
+                share(p, target);
+              },
+            })),
+          )}
+        />
+      )}
       <View className="gap-6 pb-10 pt-2">
         <View className="flex-row gap-3">
           <Summary label={t('profile.totalWorkouts')} value={String(workouts.length)} />

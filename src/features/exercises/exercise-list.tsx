@@ -1,18 +1,17 @@
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite';
-import { router } from 'expo-router';
 import { CaretRight, CheckCircle, CircleIcon } from 'phosphor-react-native';
 import { memo, type ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, Pressable, Text, View } from 'react-native';
 
 import { Button } from '@/components/ui/button';
-import { Chip } from '@/components/ui/chip';
 import { EmptyState } from '@/components/ui/empty-state';
 import { useExerciseFilters } from '@/stores/exercise-filters';
 import { hex } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
 
 import { useExerciseName } from './display';
+import { FilterButtons } from './filter-sheet';
 import { ExerciseThumb } from './media';
 import { type ExerciseListItem, exerciseListQuery } from './queries';
 
@@ -46,7 +45,7 @@ export function ExerciseList({ onSelect, header, selectedIds }: ExerciseListProp
       getItemLayout={(_, index) => ({ length: ROW_HEIGHT, offset: ROW_HEIGHT * index, index })}
       ListHeaderComponent={
         <View>
-          <FilterBar />
+          <FilterButtons />
           {header}
         </View>
       }
@@ -116,26 +115,3 @@ const ExerciseRow = memo(function ExerciseRow({
     </Pressable>
   );
 });
-
-function FilterBar() {
-  const { t } = useTranslation();
-  const { muscle, equipment } = useExerciseFilters();
-  return (
-    <View className="flex-row gap-2 px-4 pb-3 pt-2">
-      <Chip
-        menu
-        selected={muscle !== null}
-        label={muscle ? t(`muscles.${muscle}`) : t('exercises.anyMuscle')}
-        accessibilityHint={t('exercises.filterHint')}
-        onPress={() => router.push({ pathname: '/exercise/filter', params: { kind: 'muscle' } })}
-      />
-      <Chip
-        menu
-        selected={equipment !== null}
-        label={equipment ? t(`equipment.${equipment}`) : t('exercises.anyEquipment')}
-        accessibilityHint={t('exercises.filterHint')}
-        onPress={() => router.push({ pathname: '/exercise/filter', params: { kind: 'equipment' } })}
-      />
-    </View>
-  );
-}

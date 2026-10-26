@@ -2,10 +2,11 @@ import { Stack } from 'expo-router';
 import { File } from 'expo-file-system';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Alert, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Linking, Text, View } from 'react-native';
 
 import { Screen } from '@/components/screen';
 import { Button } from '@/components/ui/button';
+import { TextPrompt } from '@/components/ui/text-prompt';
 import { useDbQuery } from '@/db/use-db-query';
 import {
   detectCsv,
@@ -23,6 +24,7 @@ import {
   listImports,
   undoImport,
 } from '@/features/csv/data';
+import { fetchHevyRoutines, importHevyRoutines } from '@/features/hevy/routines';
 import { usePreferences } from '@/stores/preferences';
 import { hex } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
@@ -34,6 +36,7 @@ export default function DataScreen() {
   const units = { weightUnit, distanceUnit, lengthUnit };
   const imports = useDbQuery(listImports, importTables);
   const [busy, setBusy] = useState(false);
+  const [keyPrompt, setKeyPrompt] = useState(false);
 
   const fail = (e: unknown) =>
     Alert.alert(t('data.errorTitle'), e instanceof Error ? e.message : String(e));
@@ -106,6 +109,44 @@ export default function DataScreen() {
     }
   };
 
+  const importRoutines = async (apiKey: string) => {
+    setBusy(true);
+    try {
+      const { routines, folders } = await fetchHevyRoutines(apiKey);
+      setBusy(false);
+      if (!routines.length) {
+        Alert.alert(t('data.hevyEmpty'));
+        return;
+      }
+      Alert.alert(t('data.confirmTitle'), t('data.hevyConfirm', { count: routines.length }), [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('data.import'),
+          onPress: () => {
+            try {
+              const r = importHevyRoutines(routines, folders);
+              Alert.alert(
+                t('data.doneTitle'),
+                t('data.hevyDone', {
+                  count: r.routines,
+                  created: r.exercisesCreated,
+                  skipped: r.skipped,
+                }),
+              );
+            } catch (e) {
+              fail(e);
+            }
+          },
+        },
+      ]);
+    } catch (e) {
+      setBusy(false);
+      if (e instanceof Error && e.message === 'unauthorized')
+        Alert.alert(t('data.errorTitle'), t('data.hevyUnauthorized'));
+      else fail(e);
+    }
+  };
+
   const confirmUndo = (id: string, name: string) =>
     Alert.alert(t('data.undoTitle', { name }), t('data.undoBody'), [
       { text: t('common.cancel'), style: 'cancel' },
@@ -128,6 +169,30 @@ export default function DataScreen() {
             <Button label={t('data.pick')} size="lg" onPress={pick} />
           )}
         </Section>
+
+        <Section title={t('data.hevyTitle')} body={t('data.hevyBody')}>
+          <Button
+            label={t('data.hevyImport')}
+            size="lg"
+            disabled={busy}
+            onPress={() => setKeyPrompt(true)}
+          />
+          <Button
+            label={t('data.hevyGetKey')}
+            variant="secondary"
+            onPress={() => Linking.openURL('https://hevy.com/settings?developer').catch(() => {})}
+          />
+        </Section>
+        {keyPrompt ? (
+          <TextPrompt
+            title={t('data.hevyKeyTitle')}
+            label={t('data.hevyKeyLabel')}
+            initial=""
+            confirmLabel={t('data.import')}
+            onSubmit={importRoutines}
+            onClose={() => setKeyPrompt(false)}
+          />
+        ) : null}
 
         {imports.length ? (
           <Section title={t('data.historyTitle')}>

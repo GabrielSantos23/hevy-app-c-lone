@@ -67,9 +67,11 @@ export function slugLevels(sets: Partial<Record<Muscle, number>>) {
 export function BodyMap({
   sets,
   height,
+  side,
 }: {
   sets: Partial<Record<Muscle, number>>;
   height: number;
+  side?: 'front' | 'back';
 }) {
   const { t } = useTranslation();
   const scheme = useScheme();
@@ -95,8 +97,8 @@ export function BodyMap({
       }
     >
       <View importantForAccessibility="no-hide-descendants" className="flex-row">
-        <Body {...props} side="front" />
-        <Body {...props} side="back" />
+        {side !== 'back' ? <Body {...props} side="front" /> : null}
+        {side !== 'front' ? <Body {...props} side="back" /> : null}
       </View>
     </View>
   );

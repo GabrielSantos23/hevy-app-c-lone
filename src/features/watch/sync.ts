@@ -1,27 +1,19 @@
-import { useWorkout } from '@/stores/workout';
+import { enabled, stopWatchWorkout } from './shortcuts';
 
-import { latestFinishedWorkout } from './data';
-import { enabled, fetchWatchData, stopWatchWorkout } from './shortcuts';
+// shortcut: kept in memory, so it is lost if iOS closes Repforge in between
+let watchEnded = false;
 
-const MAX_GAP_MS = 3 * 60 * 60_000;
-
-// shortcut: kept in memory, so it is lost if iOS closes Repforge before the workout is finished
-let waitingForRepforge = false;
-
+// The Watch workout ended first (its automation opened repforge://watch-sync).
 export function watchWorkoutEnded() {
-  if (!enabled()) return;
-  if (useWorkout.getState().workout) {
-    waitingForRepforge = true;
-    return;
-  }
-  const w = latestFinishedWorkout();
-  if (w && Date.now() - (w.endedAt ?? w.startedAt) < MAX_GAP_MS) fetchWatchData(w.id, w.startedAt);
+  watchEnded = true;
 }
 
-// Finished in Repforge first: end the Watch workout, and its automation then fetches the data.
-export function repforgeWorkoutFinished(workoutId: string, startedAt: number) {
+// Finished in Repforge: end the Watch workout too, unless it already ended.
+export function repforgeWorkoutFinished() {
   if (!enabled()) return;
-  if (!waitingForRepforge) return stopWatchWorkout();
-  waitingForRepforge = false;
-  fetchWatchData(workoutId, startedAt);
+  if (watchEnded) {
+    watchEnded = false;
+    return;
+  }
+  stopWatchWorkout();
 }

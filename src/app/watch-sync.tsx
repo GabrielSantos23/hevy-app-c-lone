@@ -6,10 +6,9 @@ import { useWorkout } from '@/stores/workout';
 
 export default function WatchSyncRoute() {
   useEffect(() => {
+    if (!useWorkout.getState().workout) return router.replace('/');
     watchWorkoutEnded();
-    router.replace(
-      useWorkout.getState().workout ? { pathname: '/workout', params: { finish: '1' } } : '/',
-    );
+    router.replace({ pathname: '/workout', params: { finish: '1' } });
   }, []);
 
   return null;

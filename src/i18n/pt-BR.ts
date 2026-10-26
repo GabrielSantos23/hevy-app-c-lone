@@ -218,6 +218,15 @@ const ptBR: Translation = {
     },
   },
   exercises: {
+    allEquipment: 'Todo equipamento',
+    allMuscles: 'Todos os músculos',
+    equipmentTitle: 'Equipamento',
+    muscleGroup: 'Grupo muscular',
+    upperBody: 'Parte superior',
+    lowerBody: 'Parte inferior',
+    otherGroup: 'Outros',
+    showResults_one: 'Mostrar {{count}} resultado',
+    showResults_other: 'Mostrar {{count}} resultados',
     title: 'Exercícios',
     searchPlaceholder: 'Buscar exercícios',
     anyMuscle: 'Qualquer músculo',
@@ -338,7 +347,41 @@ const ptBR: Translation = {
     muscles: 'Séries por músculo, últimos {{count}} dias',
     musclesEmpty: 'Conclua um treino para ver os músculos trabalhados.',
   },
+  share: {
+    button: 'Compartilhar treinos',
+    period: { week: 'Últimos 7 dias', month: 'Últimos 30 dias', year: 'Últimos 12 meses' },
+    file: 'Arquivo de texto',
+    claude: 'Perguntar ao Claude',
+    title: {
+      week: 'Treinos do Repforge, últimos 7 dias ({{count}})',
+      month: 'Treinos do Repforge, últimos 30 dias ({{count}})',
+      year: 'Treinos do Repforge, últimos 12 meses ({{count}})',
+    },
+    claudePrompt:
+      'Estes são meus treinos recentes no Repforge. Analise meu progresso, o volume por músculo e a constância, e sugira o que mudar.',
+    emptyTitle: 'Nenhum treino para compartilhar',
+    emptyBody: {
+      week: 'Você não tem treinos finalizados nos últimos 7 dias.',
+      month: 'Você não tem treinos finalizados nos últimos 30 dias.',
+      year: 'Você não tem treinos finalizados nos últimos 12 meses.',
+    },
+  },
   data: {
+    hevyTitle: 'Rotinas do Hevy',
+    hevyBody:
+      'Copia todas as suas rotinas e pastas do Hevy. Precisa do Hevy Pro: copie sua chave de API nas configurações do Hevy na web.',
+    hevyImport: 'Importar rotinas do Hevy',
+    hevyGetKey: 'Pegar minha chave',
+    hevyKeyTitle: 'Chave de API do Hevy',
+    hevyKeyLabel: 'Chave de API',
+    hevyConfirm_one:
+      '{{count}} rotina encontrada. Rotinas com um nome que você já tem são puladas.',
+    hevyConfirm_other:
+      '{{count}} rotinas encontradas. Rotinas com um nome que você já tem são puladas.',
+    hevyDone: '{{count}} rotinas adicionadas, {{created}} exercícios novos, {{skipped}} puladas.',
+    hevyEmpty: 'Sua conta do Hevy não tem rotinas.',
+    hevyUnauthorized:
+      'O Hevy não aceitou essa chave. Confira se está certa e se sua conta tem Hevy Pro.',
     unnamedFile: 'Arquivo CSV',
     title: 'Importar e exportar',
     importTitle: 'Importar',
@@ -432,33 +475,20 @@ const ptBR: Translation = {
   },
   watch: {
     title: 'Apple Watch',
-    intro: 'Batimentos e calorias do Watch em cada treino.',
+    intro: 'Comece um treino de força no Watch quando começar um aqui.',
     toggleLabel: 'Usar o Apple Watch com o Repforge',
-    toggleBody: 'O Atalhos abre por um instante no início e no fim.',
+    toggleBody: 'O Atalhos abre rapidinho no início e no fim.',
     setupTitle: 'Configurar no Atalhos',
     startTitle: '"{{name}}"',
     startStep2: 'Adicione "Iniciar Treino": Treino de Força Tradicional.',
     stopTitle: '"{{name}}"',
     stopStep2: 'Adicione "Encerrar Treino". O Repforge roda ele quando você finaliza no app.',
-    finishTitle: '"{{name}}"',
-    finishStep2: '"Aguardar" 10 segundos → "Obter Datas da Entrada": Entrada do Atalho.',
-    finishStep3:
-      '"Buscar Amostras de Saúde": Frequência Cardíaca, Data de Início entre Entrada do Atalho e Data Atual → "Obter Detalhes das Amostras de Saúde": Valor.',
-    finishStep4: 'As mesmas duas ações para Energia Ativa.',
-    finishStep5:
-      '"Texto": kcal=segundos Detalhes;hr=primeiros Detalhes → "Parar e Gerar Saída": Texto.',
-    automationTitle: 'Automação: treino no Watch termina',
+    automationTitle: 'Opcional: finalizar aqui quando o treino do Watch terminar',
     automationStep1:
       'Aba Automação → + → "Treino no Apple Watch": Termina, Executar Imediatamente.',
-    automationStep2: 'Adicione "Abrir URLs" com repforge://watch-sync.',
-    noDataTitle: 'Sem dados do Apple Watch',
-    noDataBody: 'O atalho Repforge Finish retornou: {{result}}',
-    shortcutError: 'O atalho Repforge Finish parou com um erro: {{message}}',
+    automationStep2:
+      'Adicione "Abrir URLs" com repforge://watch-sync. O Repforge pergunta se quer finalizar.',
     openShortcuts: 'Abrir Atalhos',
-    calories: 'Calorias ativas',
-    avgHr: 'FC média',
-    maxHr: 'FC máxima',
-    hrSummary: 'Frequência cardíaca no treino, média {{avg}} bpm, máxima {{max}} bpm.',
   },
   boot: {
     dbError: 'Não foi possível abrir o banco de dados local.',
