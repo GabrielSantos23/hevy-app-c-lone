@@ -123,7 +123,7 @@ const ptBR: Translation = {
     resetStopwatch: 'Zerar',
     timerValue: 'Timer em {{time}}',
     stopwatchValue: 'Cronômetro em {{time}}',
-    exerciseProgress: '{{done}} de {{total}} exercícios feitos',
+    exerciseProgress: '{{done}} de {{total}} séries feitas',
     logTitle: 'Registrar treino',
     restTimer: 'Timer de descanso',
     defaultName: 'Treino',
@@ -200,6 +200,10 @@ const ptBR: Translation = {
     deleteBody: 'Ele some do histórico e das estatísticas.',
   },
   progress: {
+    records: 'Recordes pessoais',
+    setRecords: 'Recordes por série',
+    reps: 'Reps',
+    personalBest: 'Melhor marca',
     title: 'Progresso',
     chartSummary: '{{metric}} em {{count}} treinos. Último {{latest}}, melhor {{best}}.',
     kinds: {
@@ -229,6 +233,12 @@ const ptBR: Translation = {
     create: 'Novo exercício',
   },
   exerciseDetail: {
+    summary: 'Resumo',
+    history: 'Histórico',
+    noHistory: 'Registre este exercício em um treino para ver aqui.',
+    primary: 'Principal: {{muscle}}',
+    secondary: 'Secundários: {{muscles}}',
+    noInstructions: 'Ainda não há passos para este exercício.',
     primaryMuscle: 'Músculo principal',
     secondaryMuscles: 'Secundários',
     equipment: 'Equipamento',
@@ -428,6 +438,8 @@ const ptBR: Translation = {
     setupTitle: 'Configurar no Atalhos',
     startTitle: '"{{name}}"',
     startStep2: 'Adicione "Iniciar Treino": Treino de Força Tradicional.',
+    stopTitle: '"{{name}}"',
+    stopStep2: 'Adicione "Encerrar Treino". O Repforge roda ele quando você finaliza no app.',
     finishTitle: '"{{name}}"',
     finishStep2: '"Aguardar" 10 segundos → "Obter Datas da Entrada": Entrada do Atalho.',
     finishStep3:

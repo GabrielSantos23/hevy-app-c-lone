@@ -1,8 +1,9 @@
 import { GlassView } from 'expo-glass-effect';
 import { useKeepAwake } from 'expo-keep-awake';
-import { router, Stack } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Barbell, CaretDown, Plus, Timer } from 'phosphor-react-native';
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useEffectEvent, useMemo, useState } from 'react';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Alert, Pressable, ScrollView, Text, Vibration, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet } from '@/components/ui/sheet';
 import type { Muscle } from '@/db/schema';
 import { ExerciseEditor } from '@/features/routines/exercise-editor';
+import type { UnitPrefs } from '@/features/routines/convert';
 import { repforgeWorkoutFinished } from '@/features/watch/sync';
 import { BodyMap } from '@/features/workouts/body-map';
 import { ClockSheet } from '@/features/workouts/clock-sheet';
@@ -29,8 +31,29 @@ import { useNow } from '@/lib/use-now';
 import type { DraftExercise, DraftSet } from '@/stores/exercise-draft';
 import { usePreferences } from '@/stores/preferences';
 import { useWorkout } from '@/stores/workout';
-import { fontFamily, hex } from '@/theme/tokens';
+import { fontFamily, glassTint, hex } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
+
+function confirmFinish(t: TFunction, units: UnitPrefs) {
+  const workout = useWorkout.getState().workout;
+  if (!workout) return;
+  if (!hasDoneSets(workout.exercises)) {
+    Alert.alert(t('workout.nothingDoneTitle'), t('workout.nothingDoneBody'));
+    return;
+  }
+  Alert.alert(t('workout.finishTitle'), undefined, [
+    { text: t('workout.keepGoing'), style: 'cancel' },
+    {
+      text: t('workout.finish'),
+      onPress: () => {
+        const id = finishWorkout(workout, units, Date.now());
+        stopRest();
+        useWorkout.getState().end();
+        repforgeWorkoutFinished(id, workout.startedAt);
+      },
+    },
+  ]);
+}
 
 export default function WorkoutScreen() {
   useKeepAwake();
@@ -49,6 +72,16 @@ export default function WorkoutScreen() {
   useEffect(() => {
     if (!workout) router.back();
   }, [workout]);
+
+  // The Watch workout ended (watch-sync), so offer to finish this one too.
+  const { finish: finishParam } = useLocalSearchParams<{ finish?: string }>();
+  const onFinishParam = useEffectEvent(() => {
+    router.setParams({ finish: undefined });
+    confirmFinish(t, units);
+  });
+  useEffect(() => {
+    if (finishParam === '1') onFinishParam();
+  }, [finishParam]);
 
   const exerciseIds = workout?.exercises.map((e) => e.exerciseId).join(',') ?? '';
   const routineFilter =
@@ -88,23 +121,7 @@ export default function WorkoutScreen() {
       { text: t('workout.discard'), style: 'destructive', onPress: close },
     ]);
 
-  const finish = () => {
-    if (!hasDoneSets(workout.exercises)) {
-      Alert.alert(t('workout.nothingDoneTitle'), t('workout.nothingDoneBody'));
-      return;
-    }
-    Alert.alert(t('workout.finishTitle'), undefined, [
-      { text: t('workout.keepGoing'), style: 'cancel' },
-      {
-        text: t('workout.finish'),
-        onPress: () => {
-          const id = finishWorkout(workout, units, Date.now());
-          close();
-          repforgeWorkoutFinished(id, workout.startedAt);
-        },
-      },
-    ]);
-  };
+  const finish = () => confirmFinish(t, units);
 
   const worked = (Object.entries(muscles) as [Muscle, number][]).sort((a, b) => b[1] - a[1]);
 
@@ -165,10 +182,8 @@ export default function WorkoutScreen() {
 
       {workout.exercises.length ? (
         <ExerciseProgress
-          done={
-            workout.exercises.filter((e) => e.sets.length && e.sets.every((x) => x.done)).length
-          }
-          total={workout.exercises.length}
+          done={workout.exercises.reduce((n, e) => n + e.sets.filter((x) => x.done).length, 0)}
+          total={workout.exercises.reduce((n, e) => n + e.sets.length, 0)}
         />
       ) : null}
       <View className="flex-row items-center border-b border-border px-4 py-4">
@@ -330,6 +345,7 @@ function RestBar({ endsAt, total }: { endsAt: number; total: number }) {
   }, [remaining]);
 
   const glass = useGlass();
+  const scheme = useScheme();
   const content = (
     <>
       <View
@@ -378,7 +394,7 @@ function RestBar({ endsAt, total }: { endsAt: number; total: number }) {
         style={{ paddingBottom: insets.bottom + 8 }}
         className="absolute bottom-0 left-0 right-0 px-3"
       >
-        <GlassView style={{ borderRadius: 32 }}>
+        <GlassView colorScheme={scheme} tintColor={glassTint(scheme)} style={{ borderRadius: 32 }}>
           <View className="gap-4 px-4 pb-4">{content}</View>
         </GlassView>
       </View>

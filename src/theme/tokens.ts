@@ -74,6 +74,9 @@ export const palette: Record<ColorScheme, Record<ColorToken, Rgb>> = {
 export const hex = (scheme: ColorScheme, token: ColorToken): string =>
   `#${palette[scheme][token].map((c) => c.toString(16).padStart(2, '0')).join('')}`;
 
+// Tints liquid glass with the surface so text stays readable over busy content.
+export const glassTint = (scheme: ColorScheme) => `${hex(scheme, 'surface')}B3`;
+
 export const cssVars = (scheme: ColorScheme): Record<`--color-${ColorToken}`, string> =>
   Object.fromEntries(
     colorTokens.map((t) => [`--color-${t}`, palette[scheme][t].join(' ')]),

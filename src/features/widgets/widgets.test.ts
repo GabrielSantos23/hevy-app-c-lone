@@ -45,7 +45,15 @@ describe('widget data', () => {
     };
     const props = widgetProps(input, now);
     expect(props.volume.value).toBe('12.3k kg');
-    expect(props.week.days.map((d) => d.done)).toEqual([false, false, false, false, false, true, false]);
+    expect(props.week.days.map((d) => d.done)).toEqual([
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+    ]);
     expect(props.calendar.done).toEqual([23]);
     expect(props.start.routines[0].url).toBe('repforge://train?start=r%201');
     const timeline = widgetTimeline(input, now);
@@ -119,6 +127,9 @@ describe('live activity props', () => {
 
   it('reports when every set is done', () => {
     const done = { ...workout, exercises: [{ ...entry, sets: [set({ done: true })] }] };
-    expect(activityProps(done, null, ctx)).toMatchObject({ detail: 'activity.allDone', title: 'Push' });
+    expect(activityProps(done, null, ctx)).toMatchObject({
+      detail: 'activity.allDone',
+      title: 'Push',
+    });
   });
 });

@@ -121,7 +121,12 @@ export function workoutSummaries(
 
 export function exerciseSessions(exerciseId: string): Session[] {
   const rows = db
-    .select({ workoutId: workout.id, startedAt: workout.startedAt, set: workoutSet })
+    .select({
+      workoutId: workout.id,
+      name: workout.name,
+      startedAt: workout.startedAt,
+      set: workoutSet,
+    })
     .from(workoutSet)
     .innerJoin(workoutExercise, eq(workoutExercise.id, workoutSet.workoutExerciseId))
     .innerJoin(workout, eq(workout.id, workoutExercise.workoutId))
@@ -129,11 +134,11 @@ export function exerciseSessions(exerciseId: string): Session[] {
     .orderBy(asc(workout.startedAt), asc(workoutSet.position))
     .all();
   const sessions = new Map<string, Session>();
-  for (const { workoutId, startedAt, set } of rows) {
+  for (const { workoutId, name, startedAt, set } of rows) {
     const s: HistorySet = set;
     const existing = sessions.get(workoutId);
     if (existing) existing.sets.push(s);
-    else sessions.set(workoutId, { workoutId, startedAt, sets: [s] });
+    else sessions.set(workoutId, { workoutId, name, startedAt, sets: [s] });
   }
   return [...sessions.values()];
 }

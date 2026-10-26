@@ -121,7 +121,7 @@ const en = {
     resetStopwatch: 'Reset',
     timerValue: 'Timer set to {{time}}',
     stopwatchValue: 'Stopwatch at {{time}}',
-    exerciseProgress: '{{done}} of {{total}} exercises done',
+    exerciseProgress: '{{done}} of {{total}} sets done',
     logTitle: 'Log Workout',
     restTimer: 'Rest timer',
     defaultName: 'Workout',
@@ -198,6 +198,10 @@ const en = {
     deleteBody: 'It disappears from your history and stats.',
   },
   progress: {
+    records: 'Personal records',
+    setRecords: 'Set records',
+    reps: 'Reps',
+    personalBest: 'Personal best',
     title: 'Progress',
     chartSummary: '{{metric}} over {{count}} workouts. Latest {{latest}}, best {{best}}.',
     kinds: {
@@ -227,6 +231,12 @@ const en = {
     create: 'New exercise',
   },
   exerciseDetail: {
+    summary: 'Summary',
+    history: 'History',
+    noHistory: 'Log this exercise in a workout to see it here.',
+    primary: 'Primary: {{muscle}}',
+    secondary: 'Secondary: {{muscles}}',
+    noInstructions: 'No steps for this exercise yet.',
     primaryMuscle: 'Primary muscle',
     secondaryMuscles: 'Secondary',
     equipment: 'Equipment',
@@ -426,6 +436,8 @@ const en = {
     setupTitle: 'Set up in Shortcuts',
     startTitle: '"{{name}}"',
     startStep2: 'Add "Start Workout": Traditional Strength Training.',
+    stopTitle: '"{{name}}"',
+    stopStep2: 'Add "End Workout". Repforge runs it when you finish in the app.',
     finishTitle: '"{{name}}"',
     finishStep2: '"Wait" 10 seconds → "Get Dates from Input": Shortcut Input.',
     finishStep3:

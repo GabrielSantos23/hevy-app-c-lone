@@ -30,7 +30,12 @@ export function nextSet(workout: ActiveWorkout) {
   return null;
 }
 
-export function setText(entry: DraftExercise, set: DraftSet, hints: Partial<DraftSet>, ctx: Context) {
+export function setText(
+  entry: DraftExercise,
+  set: DraftSet,
+  hints: Partial<DraftSet>,
+  ctx: Context,
+) {
   const unit: Partial<Record<SetField, string>> = {
     weight: ctx.units.weightUnit,
     distance: ctx.units.distanceUnit,
@@ -47,7 +52,11 @@ export function setText(entry: DraftExercise, set: DraftSet, hints: Partial<Draf
     .join(' × ');
 }
 
-export function activityProps(workout: ActiveWorkout, rest: Rest | null, ctx: Context): ActivityProps {
+export function activityProps(
+  workout: ActiveWorkout,
+  rest: Rest | null,
+  ctx: Context,
+): ActivityProps {
   const { t } = ctx;
   const next = nextSet(workout);
   const resting = rest !== null && rest.endsAt > Date.now();

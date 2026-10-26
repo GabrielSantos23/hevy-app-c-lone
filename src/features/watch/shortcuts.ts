@@ -4,6 +4,7 @@ import { usePreferences } from '@/stores/preferences';
 
 export const START_SHORTCUT = 'Repforge Start';
 export const FINISH_SHORTCUT = 'Repforge Finish';
+export const STOP_SHORTCUT = 'Repforge Stop';
 
 export type WatchData = { kcal: number | null; hr: number[] };
 
@@ -22,6 +23,10 @@ export const enabled = () => Platform.OS === 'ios' && usePreferences.getState().
 export function startWatchWorkout() {
   if (!enabled()) return;
   run(START_SHORTCUT, { 'x-success': 'repforge://workout', 'x-error': 'repforge://workout' });
+}
+
+export function stopWatchWorkout() {
+  run(STOP_SHORTCUT, { 'x-success': 'repforge://', 'x-error': 'repforge://' });
 }
 
 const pad = (n: number) => String(Math.trunc(Math.abs(n))).padStart(2, '0');

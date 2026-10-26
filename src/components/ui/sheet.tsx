@@ -5,6 +5,7 @@ import { Modal, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useGlass } from '@/lib/use-glass';
+import { glassTint } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
 
 type SheetProps = {
@@ -45,7 +46,11 @@ export function Sheet({ title, visible, onClose, children }: SheetProps) {
       />
       {glass ? (
         <View accessibilityViewIsModal style={{ paddingBottom: insets.bottom }} className="px-2">
-          <GlassView colorScheme={scheme} style={{ borderRadius: 32 }}>
+          <GlassView
+            colorScheme={scheme}
+            tintColor={glassTint(scheme)}
+            style={{ borderRadius: 32 }}
+          >
             <View className="gap-1 px-2 pb-3 pt-4">
               {header}
               {children}

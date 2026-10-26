@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { Check, DotsThree, NotePencil, Plus, Timer, X } from 'phosphor-react-native';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -236,17 +237,26 @@ function ExerciseCard({
   return (
     <View className={`gap-3 pb-2 ${inSuperset ? 'border-l-4 border-l-superset pl-3' : ''}`}>
       <View className="flex-row items-center gap-3">
-        <ExerciseThumb exerciseId={entry.exerciseId} />
-        <View className="flex-1 gap-0.5">
-          <Text numberOfLines={2} className="font-semibold text-headline text-primary-text">
-            {name}
-          </Text>
-          {inSuperset ? (
-            <Text className="font-medium text-footnote text-superset">
-              {t('routineEditor.superset')} {entry.supersetGroup}
+        <Pressable
+          accessibilityRole="link"
+          disabled={!workout}
+          onPress={() =>
+            router.push({ pathname: '/exercise/[id]', params: { id: entry.exerciseId } })
+          }
+          className="flex-1 flex-row items-center gap-3 active:opacity-70"
+        >
+          <ExerciseThumb exerciseId={entry.exerciseId} />
+          <View className="flex-1 gap-0.5">
+            <Text numberOfLines={2} className="font-semibold text-headline text-primary-text">
+              {name}
             </Text>
-          ) : null}
-        </View>
+            {inSuperset ? (
+              <Text className="font-medium text-footnote text-superset">
+                {t('routineEditor.superset')} {entry.supersetGroup}
+              </Text>
+            ) : null}
+          </View>
+        </Pressable>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t('routineEditor.exerciseOptions', { name })}

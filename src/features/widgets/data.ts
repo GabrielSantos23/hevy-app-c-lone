@@ -132,9 +132,7 @@ export function widgetProps(input: WidgetInput, now: number): WidgetProps {
       weeks: monthGrid(now, weekStart),
       done: [
         ...new Set(
-          starts
-            .filter((s) => s >= monthStart && s < monthEnd)
-            .map((s) => new Date(s).getDate()),
+          starts.filter((s) => s >= monthStart && s < monthEnd).map((s) => new Date(s).getDate()),
         ),
       ],
       today: date.getDate(),

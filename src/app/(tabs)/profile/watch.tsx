@@ -6,7 +6,7 @@ import { Linking, Pressable, Switch, Text, View } from 'react-native';
 
 import { Screen } from '@/components/screen';
 import { Button } from '@/components/ui/button';
-import { FINISH_SHORTCUT, START_SHORTCUT } from '@/features/watch/shortcuts';
+import { FINISH_SHORTCUT, START_SHORTCUT, STOP_SHORTCUT } from '@/features/watch/shortcuts';
 import { usePreferences } from '@/stores/preferences';
 import { hex } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
@@ -16,9 +16,13 @@ export default function WatchScreen() {
   const scheme = useScheme();
   const enabled = usePreferences((s) => s.watchShortcuts);
   const set = usePreferences((s) => s.set);
-  const [open, setOpen] = useState<'start' | 'finish' | 'automation' | null>(null);
+  const [open, setOpen] = useState<'start' | 'stop' | 'finish' | 'automation' | null>(null);
 
-  const steps = (key: 'start' | 'finish' | 'automation', title: string, items: string[]) => {
+  const steps = (
+    key: 'start' | 'stop' | 'finish' | 'automation',
+    title: string,
+    items: string[],
+  ) => {
     const expanded = open === key;
     const Caret = expanded ? CaretDown : CaretRight;
     return (
@@ -73,6 +77,7 @@ export default function WatchScreen() {
             {t('watch.setupTitle')}
           </Text>
           {steps('start', t('watch.startTitle', { name: START_SHORTCUT }), [t('watch.startStep2')])}
+          {steps('stop', t('watch.stopTitle', { name: STOP_SHORTCUT }), [t('watch.stopStep2')])}
           {steps('finish', t('watch.finishTitle', { name: FINISH_SHORTCUT }), [
             t('watch.finishStep2'),
             t('watch.finishStep3'),

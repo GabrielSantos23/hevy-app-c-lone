@@ -22,7 +22,7 @@ export type HistorySet = {
   customMetric: number | null;
 };
 
-export type Session = { workoutId: string; startedAt: number; sets: HistorySet[] };
+export type Session = { workoutId: string; name?: string; startedAt: number; sets: HistorySet[] };
 
 const kindsByType: Record<ExerciseType, RecordKind[]> = {
   weight_reps: ['best_weight', 'best_1rm', 'best_volume'],

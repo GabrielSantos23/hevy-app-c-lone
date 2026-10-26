@@ -1,7 +1,7 @@
 import { useWorkout } from '@/stores/workout';
 
 import { latestFinishedWorkout } from './data';
-import { enabled, fetchWatchData } from './shortcuts';
+import { enabled, fetchWatchData, stopWatchWorkout } from './shortcuts';
 
 const MAX_GAP_MS = 3 * 60 * 60_000;
 
@@ -18,8 +18,10 @@ export function watchWorkoutEnded() {
   if (w && Date.now() - (w.endedAt ?? w.startedAt) < MAX_GAP_MS) fetchWatchData(w.id, w.startedAt);
 }
 
+// Finished in Repforge first: end the Watch workout, and its automation then fetches the data.
 export function repforgeWorkoutFinished(workoutId: string, startedAt: number) {
-  if (!waitingForRepforge || !enabled()) return;
+  if (!enabled()) return;
+  if (!waitingForRepforge) return stopWatchWorkout();
   waitingForRepforge = false;
   fetchWatchData(workoutId, startedAt);
 }
