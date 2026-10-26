@@ -17,6 +17,9 @@ export type Rest = { endsAt: number; total: number; notificationId: string | nul
 type WorkoutStore = ExerciseActions & {
   workout: ActiveWorkout | null;
   rest: Rest | null;
+  // Exercises picked as replacements, newest first, for the picker's suggestions.
+  swaps: string[];
+  noteSwap: (exerciseId: string) => void;
   begin: (workout: ActiveWorkout) => void;
   end: () => void;
   setRestState: (rest: Rest | null) => void;
@@ -27,6 +30,9 @@ export const useWorkout = create<WorkoutStore>()(
     (set) => ({
       workout: null,
       rest: null,
+      swaps: [],
+      noteSwap: (id) =>
+        set((s) => ({ swaps: [id, ...s.swaps.filter((x) => x !== id)].slice(0, 20) })),
       begin: (workout) => set({ workout, rest: null }),
       end: () => set({ workout: null, rest: null }),
       setRestState: (rest) => set({ rest }),
@@ -39,7 +45,7 @@ export const useWorkout = create<WorkoutStore>()(
     {
       name: 'active-workout',
       storage: createJSONStorage(() => Storage),
-      partialize: (s) => ({ workout: s.workout, rest: s.rest }),
+      partialize: (s) => ({ workout: s.workout, rest: s.rest, swaps: s.swaps }),
     },
   ),
 );

@@ -18,6 +18,7 @@ import { BodyMap } from '@/features/workouts/body-map';
 import { ClockSheet } from '@/features/workouts/clock-sheet';
 import { completeSet } from '@/features/workouts/complete-set';
 import { finishWorkout, hasDoneSets, previousSets } from '@/features/workouts/data';
+import { setFinished } from '@/features/workouts/finish';
 import { adjustRest, stopRest } from '@/features/workouts/rest-timer';
 import {
   formatClock,
@@ -34,6 +35,9 @@ import { useWorkout } from '@/stores/workout';
 import { fontFamily, glassTint, hex } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
 
+// Set when a workout is saved, so the screen opens its summary instead of just closing.
+let finishedId: string | null = null;
+
 // fromWatch: the Watch workout already ended, so finish without asking and leave the Watch alone.
 function confirmFinish(t: TFunction, units: UnitPrefs, fromWatch = false) {
   const workout = useWorkout.getState().workout;
@@ -43,7 +47,8 @@ function confirmFinish(t: TFunction, units: UnitPrefs, fromWatch = false) {
     return;
   }
   const done = () => {
-    finishWorkout(workout, units, Date.now());
+    finishedId = finishWorkout(workout, units, Date.now());
+    setFinished(finishedId, workout);
     stopRest();
     useWorkout.getState().end();
     if (!fromWatch) stopWatchWorkout();
@@ -70,7 +75,11 @@ export default function WorkoutScreen() {
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    if (!workout) router.back();
+    if (workout) return;
+    const id = finishedId;
+    finishedId = null;
+    if (id) router.replace({ pathname: '/workout/summary', params: { id } });
+    else router.back();
   }, [workout]);
 
   // The Watch workout ended (watch-sync), so this one finishes too.

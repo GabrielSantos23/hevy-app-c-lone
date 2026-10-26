@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { useDbQuery } from '@/db/use-db-query';
 import { historyTables, workoutSummaries } from '@/features/stats/data';
 import { dayKey, MonthCalendar } from '@/features/stats/month-calendar';
+import { ShareWorkoutsMenu } from '@/features/stats/share-menu';
 import { WorkoutCard } from '@/features/stats/workout-card';
 import { usePreferences } from '@/stores/preferences';
 
@@ -28,6 +29,7 @@ export default function HistoryScreen() {
   return (
     <>
       <Stack.Screen options={{ title: t('history.title') }} />
+      <ShareWorkoutsMenu />
       <FlatList
         data={workouts}
         keyExtractor={(w) => w.id}

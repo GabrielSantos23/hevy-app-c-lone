@@ -124,8 +124,10 @@ export function widgetStatus() {
   const native = requireOptionalNativeModule<{ storageStatus?: () => string }>('ExpoWidgets');
   if (!native) return null;
   const storage = native.storageStatus?.() ?? '?';
-  return lastError ? `${storage}
-${lastError}` : storage;
+  return lastError
+    ? `${storage}
+${lastError}`
+    : storage;
 }
 
 export function startWidgetSync() {

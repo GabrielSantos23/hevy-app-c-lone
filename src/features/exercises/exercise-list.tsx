@@ -30,7 +30,8 @@ export function ExerciseList({ onSelect, header, selectedIds }: ExerciseListProp
     () => exerciseListQuery({ search, muscle, equipment }),
     [search, muscle, equipment],
   );
-  const { data } = useLiveQuery(query, [search, muscle, equipment]);
+  // data starts as [] before the first result, so updatedAt tells loading from empty.
+  const { data, updatedAt } = useLiveQuery(query, [search, muscle, equipment]);
   const filtered = muscle !== null || equipment !== null;
 
   return (
@@ -50,7 +51,7 @@ export function ExerciseList({ onSelect, header, selectedIds }: ExerciseListProp
         </View>
       }
       ListEmptyComponent={
-        data === undefined ? undefined : (
+        updatedAt === undefined ? undefined : (
           <EmptyState
             title={t('exercises.noResultsTitle')}
             body={t(filtered ? 'exercises.noResultsFilteredBody' : 'exercises.noResultsBody')}
@@ -74,7 +75,7 @@ export function ExerciseList({ onSelect, header, selectedIds }: ExerciseListProp
   );
 }
 
-const ExerciseRow = memo(function ExerciseRow({
+export const ExerciseRow = memo(function ExerciseRow({
   item,
   onSelect,
   selected,

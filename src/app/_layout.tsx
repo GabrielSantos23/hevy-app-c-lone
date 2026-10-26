@@ -82,6 +82,10 @@ export default function RootLayout() {
             options={{ animation: 'slide_from_bottom', gestureEnabled: false }}
           />
           <Stack.Screen
+            name="workout/summary"
+            options={{ animation: 'fade', gestureEnabled: false }}
+          />
+          <Stack.Screen
             name="workout/settings"
             options={{
               presentation: 'formSheet',

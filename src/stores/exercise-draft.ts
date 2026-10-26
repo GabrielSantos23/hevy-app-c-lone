@@ -45,6 +45,7 @@ export type SetPatch = Partial<Omit<DraftSet, 'key'>>;
 export type ExerciseActions = {
   addExercises: (picked: PickedExercise[], restSeconds: number) => void;
   removeExercise: (key: string) => void;
+  replaceExercise: (key: string, picked: PickedExercise) => void;
   moveExercise: (key: string, delta: -1 | 1) => void;
   toggleSuperset: (key: string) => void;
   setRest: (key: string, restSeconds: number) => void;
@@ -131,6 +132,15 @@ export function exerciseActions(
         })),
       ]),
     removeExercise: (key) => editExercises((list) => list.filter((e) => e.key !== key)),
+    // Keeps the set count and types, but the old values belong to the old exercise.
+    replaceExercise: (key, picked) =>
+      editExercise(key, (e) => ({
+        ...e,
+        ...picked,
+        key: draftKey(),
+        notes: '',
+        sets: e.sets.map((s) => ({ ...emptySet(), setType: s.setType })),
+      })),
     moveExercise: (key, delta) =>
       editExercises((list) => {
         const i = list.findIndex((e) => e.key === key);

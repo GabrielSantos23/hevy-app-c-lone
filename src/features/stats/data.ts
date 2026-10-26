@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, inArray, isNull, lte, sql } from 'drizzle-orm';
 
 import { db } from '@/db/client';
 import { exercise, type Muscle, workout, workoutExercise, workoutSet } from '@/db/schema';
@@ -63,6 +63,14 @@ function groupExercises(rows: Row[]): WorkoutExerciseDetail[] {
   }
   return [...byEntry.values()];
 }
+
+// 1 for the first finished workout, and so on.
+export const workoutOrdinal = (startedAt: number) =>
+  db
+    .select({ n: count() })
+    .from(workout)
+    .where(and(finished, lte(workout.startedAt, startedAt)))
+    .get()?.n ?? 1;
 
 export type WorkoutSummary = {
   id: string;

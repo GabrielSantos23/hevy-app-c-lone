@@ -77,6 +77,19 @@ export function ExerciseEditor({ exercises, actions, workout }: EditorProps) {
             ]
           : []),
       {
+        label: t('routineEditor.replaceExercise'),
+        // The picker is a modal: iOS drops it if it opens while this sheet is still closing.
+        onPress: () =>
+          setTimeout(
+            () =>
+              router.push({
+                pathname: '/routine/add-exercise',
+                params: { target: workout ? 'workout' : 'routine', replace: e.key },
+              }),
+            500,
+          ),
+      },
+      {
         label: t('routineEditor.removeExercise'),
         destructive: true,
         onPress: () => actions.removeExercise(e.key),
