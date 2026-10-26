@@ -17,7 +17,7 @@ const run = (name: string, params: Record<string, string>) =>
     () => {},
   );
 
-const enabled = () => Platform.OS === 'ios' && usePreferences.getState().watchShortcuts;
+export const enabled = () => Platform.OS === 'ios' && usePreferences.getState().watchShortcuts;
 
 export function startWatchWorkout() {
   if (!enabled()) return;
@@ -34,8 +34,7 @@ export function localStamp(ms: number) {
   );
 }
 
-export function finishWatchWorkout(workoutId: string, startedAt: number) {
-  if (!enabled()) return;
+export function fetchWatchData(workoutId: string, startedAt: number) {
   run(FINISH_SHORTCUT, {
     input: 'text',
     text: localStamp(startedAt - 60_000),

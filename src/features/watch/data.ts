@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, desc, eq, isNull } from 'drizzle-orm';
 import { randomUUID } from 'expo-crypto';
 
 import { db } from '@/db/client';
@@ -7,6 +7,15 @@ import { healthLink, workout } from '@/db/schema';
 import type { WatchData } from './shortcuts';
 
 export const watchTables = ['health_link'];
+
+export const latestFinishedWorkout = () =>
+  db
+    .select({ id: workout.id, startedAt: workout.startedAt, endedAt: workout.endedAt })
+    .from(workout)
+    .where(and(eq(workout.status, 'finished'), isNull(workout.deletedAt)))
+    .orderBy(desc(workout.startedAt))
+    .limit(1)
+    .get() ?? null;
 
 export const getWatchData = (workoutId: string) =>
   db.select().from(healthLink).where(eq(healthLink.workoutId, workoutId)).get() ?? null;

@@ -68,6 +68,7 @@ export default function RootLayout() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="watch-data" options={{ animation: 'none' }} />
+          <Stack.Screen name="watch-sync" options={{ animation: 'none' }} />
           <Stack.Screen
             name="exercise/filter"
             options={{

@@ -411,21 +411,23 @@ const ptBR: Translation = {
   },
   watch: {
     title: 'Apple Watch',
-    intro:
-      'Inicie e encerre treinos no Watch pelo Repforge e veja frequência cardíaca e calorias em cada treino.',
-    toggleLabel: 'Iniciar e encerrar treinos no Watch com o Repforge',
-    toggleBody: 'O app Atalhos abre por um instante quando o treino começa e termina.',
-    setupTitle: 'Configurar 2 atalhos',
+    intro: 'Batimentos e calorias do Watch em cada treino.',
+    toggleLabel: 'Usar o Apple Watch com o Repforge',
+    toggleBody: 'O Atalhos abre por um instante no início e no fim.',
+    setupTitle: 'Configurar no Atalhos',
     startTitle: '"{{name}}"',
     startStep2: 'Adicione "Iniciar Treino": Treino de Força Tradicional.',
     finishTitle: '"{{name}}"',
-    finishStep2:
-      '"Encerrar Treino" → "Aguardar" 10 segundos → "Obter Datas da Entrada": Entrada do Atalho.',
+    finishStep2: '"Aguardar" 10 segundos → "Obter Datas da Entrada": Entrada do Atalho.',
     finishStep3:
       '"Buscar Amostras de Saúde": Frequência Cardíaca, Data de Início entre Entrada do Atalho e Data Atual → "Obter Detalhes das Amostras de Saúde": Valor.',
     finishStep4: 'As mesmas duas ações para Energia Ativa.',
     finishStep5:
       '"Texto": kcal=segundos Detalhes;hr=primeiros Detalhes → "Parar e Gerar Saída": Texto.',
+    automationTitle: 'Automação: treino no Watch termina',
+    automationStep1:
+      'Aba Automação → + → "Treino no Apple Watch": Termina, Executar Imediatamente.',
+    automationStep2: 'Adicione "Abrir URLs" com repforge://watch-sync.',
     noDataTitle: 'Sem dados do Apple Watch',
     noDataBody: 'O atalho Repforge Finish retornou: {{result}}',
     shortcutError: 'O atalho Repforge Finish parou com um erro: {{message}}',

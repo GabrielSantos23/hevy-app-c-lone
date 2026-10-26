@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet } from '@/components/ui/sheet';
 import type { Muscle } from '@/db/schema';
 import { ExerciseEditor } from '@/features/routines/exercise-editor';
-import { finishWatchWorkout } from '@/features/watch/shortcuts';
+import { repforgeWorkoutFinished } from '@/features/watch/sync';
 import { BodyMap } from '@/features/workouts/body-map';
 import { completeSet } from '@/features/workouts/complete-set';
 import { finishWorkout, hasDoneSets, previousSets } from '@/features/workouts/data';
@@ -102,7 +102,7 @@ export default function WorkoutScreen() {
         onPress: () => {
           const id = finishWorkout(workout, units, Date.now());
           close();
-          finishWatchWorkout(id, workout.startedAt);
+          repforgeWorkoutFinished(id, workout.startedAt);
         },
       },
     ]);

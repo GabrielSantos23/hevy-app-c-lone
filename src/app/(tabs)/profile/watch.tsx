@@ -16,9 +16,9 @@ export default function WatchScreen() {
   const scheme = useScheme();
   const enabled = usePreferences((s) => s.watchShortcuts);
   const set = usePreferences((s) => s.set);
-  const [open, setOpen] = useState<'start' | 'finish' | null>(null);
+  const [open, setOpen] = useState<'start' | 'finish' | 'automation' | null>(null);
 
-  const steps = (key: 'start' | 'finish', title: string, items: string[]) => {
+  const steps = (key: 'start' | 'finish' | 'automation', title: string, items: string[]) => {
     const expanded = open === key;
     const Caret = expanded ? CaretDown : CaretRight;
     return (
@@ -78,6 +78,10 @@ export default function WatchScreen() {
             t('watch.finishStep3'),
             t('watch.finishStep4'),
             t('watch.finishStep5'),
+          ])}
+          {steps('automation', t('watch.automationTitle'), [
+            t('watch.automationStep1'),
+            t('watch.automationStep2'),
           ])}
         </View>
         <Button
