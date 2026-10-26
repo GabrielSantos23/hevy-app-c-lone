@@ -7,16 +7,16 @@ import { useTranslation } from 'react-i18next';
 import { Alert, Pressable, ScrollView, Text, Vibration, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ActionSheet } from '@/components/ui/action-sheet';
 import { Button } from '@/components/ui/button';
 import { Sheet } from '@/components/ui/sheet';
 import type { Muscle } from '@/db/schema';
 import { ExerciseEditor } from '@/features/routines/exercise-editor';
 import { repforgeWorkoutFinished } from '@/features/watch/sync';
 import { BodyMap } from '@/features/workouts/body-map';
+import { ClockSheet } from '@/features/workouts/clock-sheet';
 import { completeSet } from '@/features/workouts/complete-set';
 import { finishWorkout, hasDoneSets, previousSets } from '@/features/workouts/data';
-import { adjustRest, startRest, stopRest } from '@/features/workouts/rest-timer';
+import { adjustRest, stopRest } from '@/features/workouts/rest-timer';
 import {
   formatClock,
   formatDurationWords,
@@ -31,8 +31,6 @@ import { usePreferences } from '@/stores/preferences';
 import { useWorkout } from '@/stores/workout';
 import { fontFamily, hex } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
-
-const MANUAL_REST = [30, 60, 90, 120, 180, 300];
 
 export default function WorkoutScreen() {
   useKeepAwake();
@@ -134,7 +132,7 @@ export default function WorkoutScreen() {
           <Stack.Toolbar placement="right">
             <Stack.Toolbar.Button
               icon="timer"
-              accessibilityLabel={t('workout.restTimer')}
+              accessibilityLabel={t('workout.clock')}
               onPress={() => setTimerMenu(true)}
             />
             <Stack.Toolbar.Button
@@ -158,13 +156,21 @@ export default function WorkoutScreen() {
           >
             {t('workout.logTitle')}
           </Text>
-          <RoundButton label={t('workout.restTimer')} onPress={() => setTimerMenu(true)}>
+          <RoundButton label={t('workout.clock')} onPress={() => setTimerMenu(true)}>
             <Timer size={24} color={hex(scheme, 'foreground')} />
           </RoundButton>
           <Button label={t('workout.finish')} pill onPress={finish} />
         </View>
       )}
 
+      {workout.exercises.length ? (
+        <ExerciseProgress
+          done={
+            workout.exercises.filter((e) => e.sets.length && e.sets.every((x) => x.done)).length
+          }
+          total={workout.exercises.length}
+        />
+      ) : null}
       <View className="flex-row items-center border-b border-border px-4 py-4">
         <Stat
           label={t('workout.duration')}
@@ -233,15 +239,7 @@ export default function WorkoutScreen() {
 
       {rest ? <RestBar endsAt={rest.endsAt} total={rest.total} /> : null}
 
-      <ActionSheet
-        visible={timerMenu}
-        title={t('workout.restTimer')}
-        actions={MANUAL_REST.map((sec) => ({
-          label: formatDurationWords(sec),
-          onPress: () => startRest(sec),
-        }))}
-        onClose={() => setTimerMenu(false)}
-      />
+      <ClockSheet visible={timerMenu} onClose={() => setTimerMenu(false)} />
 
       <Sheet
         title={t('workout.musclesTitle')}
@@ -266,6 +264,21 @@ export default function WorkoutScreen() {
           </Text>
         )}
       </Sheet>
+    </View>
+  );
+}
+
+function ExerciseProgress({ done, total }: { done: number; total: number }) {
+  const { t } = useTranslation();
+  return (
+    <View
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel={t('workout.exerciseProgress', { done, total })}
+      accessibilityValue={{ min: 0, max: total, now: done }}
+      className="h-1 bg-surface-raised"
+    >
+      <View style={{ width: `${(done / total) * 100}%` }} className="h-1 bg-primary" />
     </View>
   );
 }

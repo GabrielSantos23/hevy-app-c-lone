@@ -1,6 +1,13 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { DotsThree } from 'phosphor-react-native';
-import { useEffect, useEffectEvent, useState } from 'react';
+import {
+  CaretDown,
+  CaretRight,
+  ClipboardText,
+  DotsThree,
+  FolderSimplePlus,
+  Plus,
+} from 'phosphor-react-native';
+import { type ReactNode, useEffect, useEffectEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Pressable, Text, View } from 'react-native';
 
@@ -23,7 +30,6 @@ import {
   routineList,
   routineTables,
 } from '@/features/routines/data';
-import { estimateSeconds } from '@/features/routines/estimate';
 import { startWatchWorkout } from '@/features/watch/shortcuts';
 import { workoutFromRoutine } from '@/features/workouts/data';
 import { prepareRestNotifications, stopRest } from '@/features/workouts/rest-timer';
@@ -47,6 +53,7 @@ type Prompt = { kind: 'create' } | { kind: 'rename'; folder: Folder };
 
 export default function TrainScreen() {
   const { t } = useTranslation();
+  const scheme = useScheme();
   const { folders, routines } = useDbQuery(routineList, routineTables);
   const weightUnit = usePreferences((s) => s.weightUnit);
   const distanceUnit = usePreferences((s) => s.distanceUnit);
@@ -182,7 +189,14 @@ export default function TrainScreen() {
       <Stack.Screen options={{ title: t('train.title') }} />
       <View className="gap-3 pt-2">
         <ActiveWorkoutBanner />
-        <Button label={t('train.startEmpty')} size="lg" onPress={startEmpty} />
+        <Pressable
+          accessibilityRole="button"
+          onPress={startEmpty}
+          className="min-h-log flex-row items-center gap-3 rounded-lg bg-surface px-4 active:bg-surface-raised"
+        >
+          <Plus size={22} color={hex(scheme, 'foreground')} />
+          <Text className="font-medium text-body text-foreground">{t('train.startEmpty')}</Text>
+        </Pressable>
       </View>
       {empty ? (
         <EmptyState
@@ -198,26 +212,29 @@ export default function TrainScreen() {
           }
         />
       ) : (
-        <View className="gap-6 pb-10 pt-6">
-          <View className="flex-row gap-3">
-            <View className="flex-1">
-              <Button
-                label={t('train.newRoutine')}
-                variant="secondary"
-                onPress={() => newRoutine(null)}
-              />
-            </View>
-            <View className="flex-1">
-              <Button
-                label={t('train.newFolder')}
-                variant="secondary"
-                onPress={() => setPrompt({ kind: 'create' })}
-              />
-            </View>
+        <View className="gap-4 pb-10 pt-6">
+          <View className="flex-row items-center justify-between">
+            <Text accessibilityRole="header" className="font-semibold text-title-2 text-foreground">
+              {t('train.routines')}
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('train.newFolder')}
+              onPress={() => setPrompt({ kind: 'create' })}
+              className="min-h-touch min-w-touch items-center justify-center rounded-full active:bg-surface-raised"
+            >
+              <FolderSimplePlus size={26} color={hex(scheme, 'foreground')} />
+            </Pressable>
           </View>
+          <Button
+            label={t('train.newRoutine')}
+            variant="secondary"
+            icon={<ClipboardText size={22} color={hex(scheme, 'foreground')} />}
+            onPress={() => newRoutine(null)}
+          />
 
           {ungrouped.length ? (
-            <View className="gap-3">
+            <Section title={t('train.myRoutines', { count: ungrouped.length })}>
               {ungrouped.map((r) => (
                 <RoutineCard
                   key={r.id}
@@ -227,14 +244,18 @@ export default function TrainScreen() {
                   onMore={() => setSheet({ kind: 'routine', routine: r })}
                 />
               ))}
-            </View>
+            </Section>
           ) : null}
 
           {folders.map((f) => {
             const items = routines.filter((r) => r.folderId === f.id);
             return (
-              <View key={f.id} className="gap-3">
-                <FolderHeader folder={f} onMore={() => setSheet({ kind: 'folder', folder: f })} />
+              <Section
+                key={f.id}
+                title={`${f.name} (${items.length})`}
+                moreLabel={t('train.moreOptions', { name: f.name })}
+                onMore={() => setSheet({ kind: 'folder', folder: f })}
+              >
                 {items.length ? (
                   items.map((r) => (
                     <RoutineCard
@@ -250,7 +271,7 @@ export default function TrainScreen() {
                     {t('train.folderEmpty')}
                   </Text>
                 )}
-              </View>
+              </Section>
             );
           })}
         </View>
@@ -293,18 +314,41 @@ function MoreButton({ label, onPress }: { label: string; onPress: () => void }) 
   );
 }
 
-function FolderHeader({ folder, onMore }: { folder: Folder; onMore: () => void }) {
-  const { t } = useTranslation();
+function Section({
+  title,
+  moreLabel,
+  onMore,
+  children,
+}: {
+  title: string;
+  moreLabel?: string;
+  onMore?: () => void;
+  children: ReactNode;
+}) {
+  const scheme = useScheme();
+  const [open, setOpen] = useState(true);
+  const Caret = open ? CaretDown : CaretRight;
   return (
-    <View className="flex-row items-center justify-between">
-      <Text
-        accessibilityRole="header"
-        numberOfLines={1}
-        className="flex-1 font-semibold text-title-2 text-foreground"
-      >
-        {folder.name}
-      </Text>
-      <MoreButton label={t('train.moreOptions', { name: folder.name })} onPress={onMore} />
+    <View className="gap-3">
+      <View className="flex-row items-center">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ expanded: open }}
+          onPress={() => setOpen(!open)}
+          className="min-h-touch flex-1 flex-row items-center gap-2"
+        >
+          <Caret size={18} weight="fill" color={hex(scheme, 'muted-foreground')} />
+          <Text
+            accessibilityRole="header"
+            numberOfLines={1}
+            className="flex-1 font-medium text-body text-muted-foreground"
+          >
+            {title}
+          </Text>
+        </Pressable>
+        {onMore && moreLabel ? <MoreButton label={moreLabel} onPress={onMore} /> : null}
+      </View>
+      {open ? children : null}
     </View>
   );
 }
@@ -347,18 +391,11 @@ function RoutineCard({
 }) {
   const { t } = useTranslation();
   const displayName = useExerciseName();
-  const defaultRest = usePreferences((s) => s.defaultRestSeconds);
-  const count = routine.exercises.length;
-  const minutes = Math.max(1, Math.round(estimateSeconds(routine.exercises, defaultRest) / 60));
-  const meta = count
-    ? `${t('train.exerciseCount', { count })} · ${t('train.minutes', { count: minutes })}`
-    : t('train.noExercises');
   return (
-    <View className="rounded-lg border border-border bg-surface">
+    <View className="rounded-lg bg-surface">
       <View className="flex-row">
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`${routine.name}, ${meta}`}
           accessibilityHint={t('train.editHint')}
           onPress={onPress}
           className="flex-1 gap-1 rounded-tl-lg pb-3 pl-4 pt-4 active:bg-surface-raised"
@@ -366,12 +403,11 @@ function RoutineCard({
           <Text numberOfLines={1} className="font-semibold text-headline text-foreground">
             {routine.name}
           </Text>
-          {count ? (
-            <Text numberOfLines={2} className="font-regular text-footnote text-muted-foreground">
-              {routine.exercises.map(displayName).join(', ')}
-            </Text>
-          ) : null}
-          <Text className="font-medium text-footnote text-muted-foreground">{meta}</Text>
+          <Text numberOfLines={2} className="font-regular text-body text-muted-foreground">
+            {routine.exercises.length
+              ? routine.exercises.map(displayName).join(', ')
+              : t('train.noExercises')}
+          </Text>
         </Pressable>
         <View className="pr-2 pt-2">
           <MoreButton label={t('train.moreOptions', { name: routine.name })} onPress={onMore} />
@@ -380,7 +416,6 @@ function RoutineCard({
       <View className="px-4 pb-4">
         <Button
           label={t('train.startRoutine')}
-          variant="secondary"
           accessibilityLabel={t('train.startRoutineLabel', { name: routine.name })}
           onPress={onStart}
         />

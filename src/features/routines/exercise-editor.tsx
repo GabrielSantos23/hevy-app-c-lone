@@ -403,14 +403,16 @@ function SetRow({
 
   return (
     <View
-      className={`-mx-4 flex-row items-center gap-2 px-4 py-1 ${set.done ? 'bg-success/20' : ''}`}
+      className={`-mx-4 flex-row items-center gap-2 px-4 py-1 ${set.done ? 'bg-success/30' : ''}`}
     >
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={set.rpe ? `${setName}, RPE ${set.rpe}` : setName}
         accessibilityHint={t('routineEditor.setTypeHint')}
         onPress={onLabelPress}
-        className="min-h-touch w-12 items-center justify-center rounded-md bg-surface-raised active:opacity-80"
+        className={`min-h-touch w-12 items-center justify-center rounded-md active:opacity-80 ${
+          set.done ? '' : 'bg-surface-raised'
+        }`}
       >
         <Text className={`font-semibold text-body ${setTypeColor[set.setType]}`}>{label}</Text>
         {set.rpe ? (

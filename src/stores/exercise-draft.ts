@@ -85,6 +85,25 @@ export function normalizeSupersets(exercises: DraftExercise[]): DraftExercise[] 
   });
 }
 
+const valueFields = ['weight', 'reps', 'duration', 'distance', 'custom'] as const;
+
+// Later sets still holding the old value were never edited by hand, so they follow the change.
+export function carryForward(sets: DraftSet[], setKey: string, patch: SetPatch): DraftSet[] {
+  const i = sets.findIndex((s) => s.key === setKey);
+  if (i < 0) return sets;
+  const before = sets[i];
+  return sets.map((s, j) => {
+    if (j === i) return { ...s, ...patch };
+    if (j < i || s.done) return s;
+    let next = s;
+    for (const f of valueFields) {
+      const value = patch[f];
+      if (value !== undefined && s[f] === before[f]) next = { ...next, [f]: value };
+    }
+    return next;
+  });
+}
+
 export function exerciseActions(
   editList: (fn: (list: DraftExercise[]) => DraftExercise[]) => void,
 ): ExerciseActions {
@@ -157,7 +176,8 @@ export function exerciseActions(
       }),
     removeSet: (key, setKey) =>
       editExercise(key, (e) => ({ ...e, sets: e.sets.filter((s) => s.key !== setKey) })),
-    updateSet: (key, setKey, patch) => editSet(key, setKey, (s) => ({ ...s, ...patch })),
+    updateSet: (key, setKey, patch) =>
+      editExercise(key, (e) => ({ ...e, sets: carryForward(e.sets, setKey, patch) })),
     cycleSetType: (key, setKey) =>
       editSet(key, setKey, (s) => ({
         ...s,
