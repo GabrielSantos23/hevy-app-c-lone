@@ -487,7 +487,7 @@ const en = {
     automationTitle: 'Optional: finish here when the Watch workout ends',
     automationStep1: 'Automation tab → + → "Apple Watch Workout": Ends, Run Immediately.',
     automationStep2:
-      'Add "Open URLs" with repforge://watch-sync. Repforge asks to finish the workout.',
+      'Add "Open URLs" with repforge://watch-sync. Repforge finishes the workout on its own.',
     openShortcuts: 'Open Shortcuts',
   },
   boot: {

@@ -490,7 +490,7 @@ const ptBR: Translation = {
     automationStep1:
       'Aba Automação → + → "Treino no Apple Watch": Termina, Executar Imediatamente.',
     automationStep2:
-      'Adicione "Abrir URLs" com repforge://watch-sync. O Repforge pergunta se quer finalizar.',
+      'Adicione "Abrir URLs" com repforge://watch-sync. O Repforge finaliza o treino sozinho.',
     openShortcuts: 'Abrir Atalhos',
   },
   boot: {
