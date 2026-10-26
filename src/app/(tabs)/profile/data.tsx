@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 import { File } from 'expo-file-system';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Alert, Linking, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Text, View } from 'react-native';
 
 import { Screen } from '@/components/screen';
 import { Button } from '@/components/ui/button';
@@ -24,7 +24,9 @@ import {
   listImports,
   undoImport,
 } from '@/features/csv/data';
-import { fetchHevyRoutines, importHevyRoutines } from '@/features/hevy/routines';
+import { parseRoutinePage, routineUrl } from '@/features/hevy/page';
+import { RoutinePageReader } from '@/features/hevy/routine-page-reader';
+import { importHevyRoutines } from '@/features/hevy/routines';
 import { usePreferences } from '@/stores/preferences';
 import { hex } from '@/theme/tokens';
 import { useScheme } from '@/theme/theme-root';
@@ -36,7 +38,8 @@ export default function DataScreen() {
   const units = { weightUnit, distanceUnit, lengthUnit };
   const imports = useDbQuery(listImports, importTables);
   const [busy, setBusy] = useState(false);
-  const [keyPrompt, setKeyPrompt] = useState(false);
+  const [linkPrompt, setLinkPrompt] = useState(false);
+  const [reading, setReading] = useState<string | null>(null);
 
   const fail = (e: unknown) =>
     Alert.alert(t('data.errorTitle'), e instanceof Error ? e.message : String(e));
@@ -109,42 +112,47 @@ export default function DataScreen() {
     }
   };
 
-  const importRoutines = async (apiKey: string) => {
+  const readRoutine = (link: string) => {
+    const url = routineUrl(link);
+    if (!url) {
+      Alert.alert(t('data.errorTitle'), t('data.hevyBadLink'));
+      return;
+    }
     setBusy(true);
-    try {
-      const { routines, folders } = await fetchHevyRoutines(apiKey);
-      setBusy(false);
-      if (!routines.length) {
-        Alert.alert(t('data.hevyEmpty'));
-        return;
-      }
-      Alert.alert(t('data.confirmTitle'), t('data.hevyConfirm', { count: routines.length }), [
+    setReading(url);
+  };
+
+  const onRoutinePage = (page: { title: string; text: string }) => {
+    setReading(null);
+    setBusy(false);
+    const routine = parseRoutinePage(page.title, page.text);
+    if (!routine.exercises.length) {
+      Alert.alert(t('data.errorTitle'), t('data.hevyEmpty'));
+      return;
+    }
+    Alert.alert(
+      t('data.hevyConfirmTitle', { name: routine.title }),
+      t('data.hevyConfirm', { count: routine.exercises.length }),
+      [
         { text: t('common.cancel'), style: 'cancel' },
         {
           text: t('data.import'),
           onPress: () => {
             try {
-              const r = importHevyRoutines(routines, folders);
+              const r = importHevyRoutines([routine], []);
               Alert.alert(
                 t('data.doneTitle'),
-                t('data.hevyDone', {
-                  count: r.routines,
-                  created: r.exercisesCreated,
-                  skipped: r.skipped,
-                }),
+                r.routines
+                  ? t('data.hevyDone', { name: routine.title, created: r.exercisesCreated })
+                  : t('data.hevySkipped', { name: routine.title }),
               );
             } catch (e) {
               fail(e);
             }
           },
         },
-      ]);
-    } catch (e) {
-      setBusy(false);
-      if (e instanceof Error && e.message === 'unauthorized')
-        Alert.alert(t('data.errorTitle'), t('data.hevyUnauthorized'));
-      else fail(e);
-    }
+      ],
+    );
   };
 
   const confirmUndo = (id: string, name: string) =>
@@ -175,22 +183,28 @@ export default function DataScreen() {
             label={t('data.hevyImport')}
             size="lg"
             disabled={busy}
-            onPress={() => setKeyPrompt(true)}
-          />
-          <Button
-            label={t('data.hevyGetKey')}
-            variant="secondary"
-            onPress={() => Linking.openURL('https://hevy.com/settings?developer').catch(() => {})}
+            onPress={() => setLinkPrompt(true)}
           />
         </Section>
-        {keyPrompt ? (
+        {linkPrompt ? (
           <TextPrompt
-            title={t('data.hevyKeyTitle')}
-            label={t('data.hevyKeyLabel')}
+            title={t('data.hevyLinkTitle')}
+            label={t('data.hevyLinkLabel')}
             initial=""
             confirmLabel={t('data.import')}
-            onSubmit={importRoutines}
-            onClose={() => setKeyPrompt(false)}
+            onSubmit={readRoutine}
+            onClose={() => setLinkPrompt(false)}
+          />
+        ) : null}
+        {reading ? (
+          <RoutinePageReader
+            url={reading}
+            onRead={onRoutinePage}
+            onError={() => {
+              setReading(null);
+              setBusy(false);
+              Alert.alert(t('data.errorTitle'), t('data.hevyLoadError'));
+            }}
           />
         ) : null}
 

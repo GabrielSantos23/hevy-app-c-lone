@@ -7,9 +7,6 @@ import { buildMatcher, inferCustom } from '@/features/csv/match';
 
 import { type HevySet, hevySetValues } from './sets';
 
-// Hevy's public API (Hevy Pro only): https://api.hevyapp.com/docs
-const API = 'https://api.hevyapp.com/v1';
-
 export type HevyRoutine = {
   title: string;
   folder_id: number | null;
@@ -23,31 +20,6 @@ export type HevyRoutine = {
   }[];
 };
 export type HevyFolder = { id: number; title: string };
-
-async function getAll<T>(path: string, key: string, apiKey: string): Promise<T[]> {
-  const items: T[] = [];
-  for (let page = 1; ; page++) {
-    const res = await fetch(`${API}/${path}?page=${page}&pageSize=10`, {
-      headers: { 'api-key': apiKey.trim(), accept: 'application/json' },
-    });
-    // Hevy answers 404 for a page past the end.
-    if (res.status === 404 && page > 1) break;
-    if (res.status === 401 || res.status === 403) throw new Error('unauthorized');
-    if (!res.ok) throw new Error(`Hevy ${res.status}`);
-    const body = (await res.json()) as { page_count: number } & Record<string, T[]>;
-    items.push(...(body[key] ?? []));
-    if (page >= body.page_count) break;
-  }
-  return items;
-}
-
-export async function fetchHevyRoutines(apiKey: string) {
-  const [routines, folders] = await Promise.all([
-    getAll<HevyRoutine>('routines', 'routines', apiKey),
-    getAll<HevyFolder>('routine_folders', 'routine_folders', apiKey),
-  ]);
-  return { routines, folders };
-}
 
 // Routines whose name already exists are skipped, so importing twice adds nothing.
 export function importHevyRoutines(routines: HevyRoutine[], folders: HevyFolder[]) {
