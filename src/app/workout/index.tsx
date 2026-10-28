@@ -1,7 +1,7 @@
 import { GlassView } from 'expo-glass-effect';
 import { useKeepAwake } from 'expo-keep-awake';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { Barbell, CaretDown, Plus, Timer } from 'phosphor-react-native';
+import { Barbell, CaretDown, Fire, Heart, Plus, Timer } from 'phosphor-react-native';
 import { type ReactNode, useEffect, useEffectEvent, useMemo, useState } from 'react';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/button';
 import { Sheet } from '@/components/ui/sheet';
 import type { Muscle } from '@/db/schema';
+import { useLiveHealth } from '@/features/health/health';
 import { ExerciseEditor } from '@/features/routines/exercise-editor';
 import type { UnitPrefs } from '@/features/routines/convert';
 import { stopWatchWorkout } from '@/features/watch/shortcuts';
@@ -73,6 +74,7 @@ export default function WorkoutScreen() {
   const [timerMenu, setTimerMenu] = useState(false);
   const glass = useGlass();
   const insets = useSafeAreaInsets();
+  const live = useLiveHealth(workout?.startedAt ?? null);
 
   useEffect(() => {
     if (workout) return;
@@ -196,6 +198,9 @@ export default function WorkoutScreen() {
           total={workout.exercises.reduce((n, e) => n + e.sets.length, 0)}
         />
       ) : null}
+      {live && (live.heartRate > 0 || live.activeKcal > 0) ? (
+        <LiveHealthRow heartRate={live.heartRate} activeKcal={live.activeKcal} />
+      ) : null}
       <View className="flex-row items-center border-b border-border px-4 py-4">
         <Stat
           label={t('workout.duration')}
@@ -304,6 +309,31 @@ function ExerciseProgress({ done, total }: { done: number; total: number }) {
       className="h-1 bg-surface-raised"
     >
       <View style={{ width: `${(done / total) * 100}%` }} className="h-1 bg-primary" />
+    </View>
+  );
+}
+
+function LiveHealthRow({ heartRate, activeKcal }: { heartRate: number; activeKcal: number }) {
+  const { t } = useTranslation();
+  const scheme = useScheme();
+  const bpm = Math.round(heartRate);
+  const kcal = Math.round(activeKcal);
+  return (
+    <View
+      accessible
+      accessibilityLabel={t('workout.liveHealth', { bpm, kcal })}
+      className="flex-row items-center justify-end gap-4 px-4 pt-2"
+    >
+      {bpm > 0 ? (
+        <View className="flex-row items-center gap-1">
+          <Heart size={16} weight="fill" color={hex(scheme, 'destructive-text')} />
+          <Text className="font-semibold text-footnote text-foreground">{bpm}</Text>
+        </View>
+      ) : null}
+      <View className="flex-row items-center gap-1">
+        <Fire size={16} weight="fill" color={hex(scheme, 'set-warmup')} />
+        <Text className="font-semibold text-footnote text-foreground">{kcal}</Text>
+      </View>
     </View>
   );
 }

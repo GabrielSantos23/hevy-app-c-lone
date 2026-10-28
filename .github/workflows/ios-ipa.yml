@@ -93,6 +93,23 @@ jobs:
           codesign --force --sign - --entitlements health.entitlements health.app
           package health.app Repforge-sidestore-healthkit.ipa
 
+          # HealthKit plus the widgets' App Group. SideStore keeps both only once Xcode has
+          # enabled them on its App ID (dev.gabs.repforge.<team>); it renames the group.
+          cp keychain.entitlements group.entitlements
+          /usr/libexec/PlistBuddy \
+            -c "Add :com.apple.security.application-groups array" \
+            -c "Add :com.apple.security.application-groups:0 string group.dev.gabs.repforge" \
+            group.entitlements
+          cp group.entitlements full.entitlements
+          /usr/libexec/PlistBuddy \
+            -c "Add :com.apple.developer.healthkit bool true" \
+            -c "Add :com.apple.developer.healthkit.access array" \
+            full.entitlements
+          cp -R sidestore.app full.app
+          codesign --force --sign - --entitlements group.entitlements full.app/PlugIns/*.appex
+          codesign --force --sign - --entitlements full.entitlements full.app
+          package full.app Repforge-sidestore-full.ipa
+
       - uses: actions/upload-artifact@v5
         with:
           name: Repforge-ipa
