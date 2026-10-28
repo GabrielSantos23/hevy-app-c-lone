@@ -377,6 +377,13 @@ const ptBR: Translation = {
     healthTitle: 'Apple Saúde (teste)',
     healthBody: 'Verifica se esta build consegue ler do Saúde os treinos do Apple Watch.',
     healthTest: 'Testar acesso ao Saúde',
+    watchTitle: 'App do Apple Watch (teste)',
+    watchBody: 'Testa o app do Repforge no relógio instalado pelo Xcode. Abra ele no relógio antes de mandar mensagens.',
+    watchState: 'Estado da conexão',
+    watchOpen: 'Abrir app no relógio',
+    watchStart: 'Iniciar treino no relógio',
+    watchEnd: 'Encerrar treino no relógio',
+    watchLast: 'Última mensagem do relógio: {{message}}',
     widgetsTitle: 'Widgets',
     widgetsBody:
       'De onde os widgets da tela inicial leem seus dados. Envie isto se eles mostrarem dados de exemplo.',

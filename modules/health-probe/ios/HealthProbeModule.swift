@@ -1,5 +1,6 @@
 import ExpoModulesCore
 import HealthKit
+import WatchConnectivity
 
 // Reads Apple Health: heart rate and calories while a workout runs, and totals for a finished one.
 // The Apple Watch writes these samples during its own workout; they reach the iPhone with some delay.
@@ -14,10 +15,34 @@ public class HealthProbeModule: Module {
   private var liveQueries: [HKQuery] = []
   private var latest: (date: Date, bpm: Double)?
   private var activeKcal = 0.0
+  private lazy var watch = WatchLink { [weak self] message in
+    self?.sendEvent("onWatch", message.mapValues { $0 as Any? })
+  }
 
   public func definition() -> ModuleDefinition {
     Name("HealthProbe")
-    Events("onLive")
+    Events("onLive", "onWatch")
+
+    OnCreate { self.watch.activate() }
+
+    // Opens the Repforge watch app and starts a strength workout there.
+    AsyncFunction("startWatchApp") { (promise: Promise) in
+      let config = HKWorkoutConfiguration()
+      config.activityType = .traditionalStrengthTraining
+      config.locationType = .indoor
+      self.store.startWatchApp(with: config) { ok, error in
+        promise.resolve(ok ? "Watch app opened" : "Failed: \(error?.localizedDescription ?? "unknown")")
+      }
+    }
+
+    // "start" or "end"; the watch must be reachable (its app open or running a workout).
+    Function("sendToWatch") { (command: String) -> String in
+      self.watch.send(command)
+    }
+
+    Function("watchState") { () -> String in
+      self.watch.state()
+    }
 
     AsyncFunction("probe") { (promise: Promise) in
       guard HKHealthStore.isHealthDataAvailable() else {
@@ -151,5 +176,56 @@ public class HealthProbeModule: Module {
       })
 
     group.notify(queue: .main) { promise.resolve(result) }
+  }
+}
+
+// WatchConnectivity needs an NSObject delegate, which an Expo Module is not.
+final class WatchLink: NSObject, WCSessionDelegate {
+  private let onMessage: ([String: Any]) -> Void
+
+  init(onMessage: @escaping ([String: Any]) -> Void) {
+    self.onMessage = onMessage
+  }
+
+  func activate() {
+    guard WCSession.isSupported() else { return }
+    WCSession.default.delegate = self
+    WCSession.default.activate()
+  }
+
+  func send(_ command: String) -> String {
+    let session = WCSession.default
+    guard session.activationState == .activated else { return "Not activated" }
+    guard session.isReachable else { return "Watch not reachable (open the app on the watch)" }
+    session.sendMessage(["command": command], replyHandler: nil) { [weak self] error in
+      self?.onMessage(["event": "error", "message": error.localizedDescription])
+    }
+    return "Sent \(command)"
+  }
+
+  func state() -> String {
+    guard WCSession.isSupported() else { return "WatchConnectivity not supported" }
+    let s = WCSession.default
+    return "activated: \(s.activationState == .activated), paired: \(s.isPaired), "
+      + "app installed: \(s.isWatchAppInstalled), reachable: \(s.isReachable)"
+  }
+
+  func session(
+    _ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState,
+    error: Error?
+  ) {}
+
+  func sessionDidBecomeInactive(_ session: WCSession) {}
+
+  func sessionDidDeactivate(_ session: WCSession) {
+    session.activate()
+  }
+
+  func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
+    onMessage(message)
+  }
+
+  func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
+    onMessage(userInfo)
   }
 }

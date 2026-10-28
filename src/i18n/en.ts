@@ -375,6 +375,13 @@ const en = {
     healthTitle: 'Apple Health (test)',
     healthBody: 'Checks whether this build can read your Apple Watch workouts from Health.',
     healthTest: 'Test Health access',
+    watchTitle: 'Apple Watch app (test)',
+    watchBody: 'Checks the Repforge watch app installed from Xcode. Open it on the watch before sending messages.',
+    watchState: 'Connection status',
+    watchOpen: 'Open app on watch',
+    watchStart: 'Start workout on watch',
+    watchEnd: 'End workout on watch',
+    watchLast: 'Last message from the watch: {{message}}',
     widgetsTitle: 'Widgets',
     widgetsBody:
       'Where the home screen widgets read your data from. Send this if they show sample data.',

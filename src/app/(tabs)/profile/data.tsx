@@ -24,6 +24,7 @@ import {
   undoImport,
 } from '@/features/csv/data';
 import { useHevyRoutineImport } from '@/features/hevy/import-routine';
+import { WatchAppTest } from '@/features/watch/watch-app-test';
 import { widgetStatus } from '@/features/widgets/sync';
 import { usePreferences } from '@/stores/preferences';
 import { hex } from '@/theme/tokens';
@@ -201,6 +202,12 @@ export default function DataScreen() {
                   .catch(fail)
               }
             />
+          </Section>
+        ) : null}
+
+        {healthProbe ? (
+          <Section title={t('data.watchTitle')} body={t('data.watchBody')}>
+            <WatchAppTest />
           </Section>
         ) : null}
 
